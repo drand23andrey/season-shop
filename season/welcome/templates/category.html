@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-4">
+        <h2>{{ category.name }}</h2>
+    </div>
+</div>
+<div class="row">
+    {%for product in products_of_category%}
+    <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100">
+              <a href="#"><img class="card-img-top" src="{{ product.image.url }}" alt=""></a>
+              <div class="card-body">
+                <h4 class="card-title">
+                  <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+                </h4>
+                <h5>${{ product.price }}</h5>
+                <p class="card-text">{{ product.description }}</p>
+                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!</p>
+              </div>
+              <div class="card-footer">
+                <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+              </div>
+            </div>
+          </div>
+    {%endfor%}
+</div>
+{% endblock content %}

@@ -63,3 +63,43 @@ class Product(models.Model):
     def get_absolute_url(self):
         return reverse('product_detail', kwargs={'product_slug': self.slug})
 #******************************************************************************
+# элемент корзины
+class CartItem(models.Model):
+
+    product = models.ForeignKey(Product)
+    qty = models.PositiveIntegerField(default=1)
+    item_total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
+
+    def __str__(self):
+        return "Cart item for product {0}".format(self.product.title)
+
+
+#******************************************************************************
+# корзина
+class Cart(models.Model):
+
+    items = models.ManyToManyField(CartItem, blank=True)
+    cart_total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
+
+    def __str__(self):
+        return str(self.id)
+
+    def add_to_cart(self, product_slug):
+        cart = self
+        product = Product.objects.get(slug=product_slug)
+        new_item, _ = CartItem.objects.get_or_create(product=product, item_total=product.price)
+        if new_item not in cart.items.all():
+            cart.items.add(new_item)
+            cart.save()
+        return
+
+    def remove_from_cart(self, product_slug):
+        cart = self
+        product = Product.objects.get(slug=product_slug)
+        new_item, _ = CartItem.objects.get_or_create(product=product)
+        for cart_item in cart.items.all():
+            if cart_item.product == product:
+                cart.items.remove(cart_item)
+                cart.save()
+        return
+

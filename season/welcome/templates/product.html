@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
@@ -11,7 +12,16 @@
         <p>{% lorem %}</p>
         <hr>
         <h5>${{ product.price }}</h5>
-        <a href="#"><button class="btn btn-danger" style="margin-top: 20px;">Добавить в корзину</button></a>
+        <a href="{% url 'add_to_cart' product_slug=product.slug %}" class="add_to_cart" data-slug="{{ product.slug }}"><button class="btn btn-danger" style="margin-top: 20px;">Добавить в корзину</button></a>
       </div>      
 </div>
+<script>
+  $(document).ready(function(){
+    $('.add_to_cart').on('click', function(e){
+      e.preventDefault()
+      product_slug = $(this).attr('data-slug')
+      console.log(product_slug)
+    })
+  })  
+</script>
 {% endblock content %}

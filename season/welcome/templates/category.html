@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 <div class="row">
     <div class="col-sm-4">
@@ -18,6 +18,9 @@
                 <h5>${{ product.price }}</h5>
                 <p class="card-text">{{ product.description }}</p>
                 <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!</p>
+                {% if request.user.is_authenticated %}
+                  <p class='text-center'><a href='#' class='add_to_cart' data-slug='{{ product.slug }}'><button class='btn btn-primary'>Добавить в корзину</button></a></p>
+                {% endif %} 
               </div>
               <div class="card-footer">
                 <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
@@ -26,4 +29,27 @@
           </div>
     {%endfor%}
 </div>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script>
+  // асинхронный скриптинг для корзины
+  $(document).ready(function(){
+    $('.add_to_cart').on('click', function(e){
+      e.preventDefault()
+      product_slug = $(this).attr('data-slug')
+      // console.log(product_slug)
+      data = {
+        product_slug: product_slug  
+      }
+      $.ajax({
+        type: 'GET',
+        url: '{% url "add_to_cart" %}',
+        data: data, 
+        success: function(data){
+          // console.log(data)
+          $('#cart_count').html(data.cart_total)
+        }
+      })
+    })
+  })  
+</script>
 {% endblock content %}

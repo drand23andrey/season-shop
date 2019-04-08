@@ -220,18 +220,17 @@ def make_order_view(request):
 		buying_type = form.cleaned_data['buying_type']
 		address = form.cleaned_data['address']
 		comments = form.cleaned_data['comments']
-		new_order = Order()
-		new_order.user = request.user
-		new_order.save()
-		new_order.items.add(cart)
-		new_order.first_name = name
-		new_order.last_name = last_name
-		new_order.phone = phone
-		new_order.address = address
-		new_order.buying_type = buying_type
-		new_order.comments = comments
-		new_order.total = cart.cart_total
-		new_order.save()
+		new_order = Order.objects.create(
+			user=request.user,
+			items=cart,
+			total=cart.cart_total,
+			first_name=name,
+			last_name=last_name,
+			phone=phone,
+			address=address,
+			buying_type=buying_type,
+			comments=comments, 
+		)
 		del request.session['cart_id']
 		del request.session['total']
 		return HttpResponseRedirect(reverse('thank_you'))

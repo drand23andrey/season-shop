@@ -98,7 +98,7 @@ class CartItem(models.Model):
     item_total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
 
     def __str__(self):
-        return "Cart item for product {0}".format(self.product.title)
+        return "{0} x {1}".format(self.qty, self.product.title)
 
 
 #******************************************************************************
@@ -109,7 +109,7 @@ class Cart(models.Model):
     cart_total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
 
     def __str__(self):
-        return str(self.id)
+        return 'Cart №' + str(self.id)
 
     def add_to_cart(self, product_slug):
         cart = self
@@ -145,21 +145,22 @@ class Cart(models.Model):
 # заказ
 ORDER_STATUS_CHOICES = (
 	('Принят в обработку', 'Принят в обработку'),
-	('Выполняется', 'Выполняется'),
-	('Оплачен', 'Оплачен')
+	('Ожидает оплаты', 'Ожидает оплаты'),
+	('Оплачен, выполняется', 'Оплачен, выполняется'),
+	('Выполнен', 'Выполнен')
 )
 
 class Order(models.Model):
 
 	user = models.ForeignKey(settings.AUTH_USER_MODEL)
-	items = models.ManyToManyField(Cart)
+	items = models.ForeignKey(Cart)
 	total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
 	first_name = models.CharField(max_length=200)
 	last_name = models.CharField(max_length=200)
 	phone = models.CharField(max_length=20)
-	address = models.CharField(max_length=255)
 	buying_type = models.CharField(max_length=40, choices=(('Самовывоз', 'Самовывоз'), 
 		('Доставка', 'Доставка')), default='Самовывоз')
+	address = models.CharField(max_length=255, blank=True)
 	date = models.DateTimeField(auto_now_add=True)
 	comments = models.TextField()
 	status = models.CharField(max_length=100, choices=ORDER_STATUS_CHOICES, default=ORDER_STATUS_CHOICES[0][0])

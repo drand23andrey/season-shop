@@ -39,20 +39,18 @@
       <div class="modal-body">
       <h3>Товар</h3>
         <table class='table'>
-					{% for order_item in item.items.all %}
-						{% for ord_item in order_item.items.all %}
-							<tr>
-								<td>{{ ord_item.product.title }}</td>
-								<td>{{ ord_item.qty }} шт.</td>
-								<td>{{ ord_item.item_total }} руб.</td>
-							 </tr>
-        		{% endfor %}
-        		 <tr>
+					{% for order_item in item.items.items.all %}
+						<tr>
+							<td>{{ order_item.product.title }}</td>
+							<td>{{ order_item.qty }} шт.</td>
+							<td>{{ order_item.item_total }} руб.</td>
+						</tr>
+						{% endfor %}
+        		<tr>
 	        		<td></td>
 	        		<td>Итого</td>
 	        		<td><strong>{{ order_item.cart_total }} руб.</strong></td>
 	        	</tr>
-        	{% endfor %}
         </table>
    		<h3>Заказчик</h3>
    		 <p>Имя: {{ item.first_name }}</p>

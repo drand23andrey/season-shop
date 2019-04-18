@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+{% for part in parts %}
+<div class="row" style="margin: 0;">
+  <div class="col-lg-3">
+    <h4 class="my-4">{{part.name}}</h4>
+  </div>
+  <div class="row" style="margin: 0;">
+    {% for category in categories %}
+      {% if category.part == part %}
+        <div class="col-lg-3" style="padding: 0;">
+          <div class="card h-100">
+            <a href="{{ category.get_absolute_url }}"><img class="card-img-top" src="{{ category.image.url }}" alt=""></a>
+            <div class="card-body">
+              <h4 class="card-title">
+                <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+              </h4>
+            </div>
+          </div>
+      </div> 
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>     
+{% endfor %}
+
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script>
+  // асинхронный скриптинг для корзины
+  $(document).ready(function(){
+    $('.add_to_cart').on('click', function(e){
+      e.preventDefault()
+      product_slug = $(this).attr('data-slug')
+      // console.log(product_slug)
+      data = {
+        product_slug: product_slug  
+      }
+      $.ajax({
+        type: 'GET',
+        url: '{% url "add_to_cart" %}',
+        data: data, 
+        success: function(data){
+          // console.log(data)
+          $('#cart_count').html(data.cart_total)
+        }
+      })
+    })
+  })  
+</script>
+{% endblock content %}

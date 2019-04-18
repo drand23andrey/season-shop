@@ -35,8 +35,18 @@ class CarouselElement(models.Model):
 
 class Part(models.Model):
 	name = models.CharField(max_length=100)
+	slug = models.SlugField(blank=True)	
+	def get_absolute_url(self):
+		return reverse('part_detail', kwargs={'part_slug': self.slug})   
 	def __str__(self):
 		return self.name
+
+def pre_save_part_slug(sender, instance, *args, **kwargs):
+	if not instance.slug:
+		slug = slugify(translit(str(instance.name), reversed=True))
+		instance.slug = slug
+
+pre_save.connect(pre_save_part_slug, sender=Part)
 
 #******************************************************************************
 

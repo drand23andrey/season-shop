@@ -16,10 +16,15 @@ from welcome.views import (
 	make_order_view,
 	account_view,
 	registration_view,
-	login_view
+	login_view,
+	catalog_view,
+	part_view,
+	thank_you_view,
 	)
 
 urlpatterns = [
+	url(r'^catalog/$', catalog_view, name='catalog'),
+	url(r'^part/(?P<part_slug>[-\w]+)/$', part_view, name='part_detail'),
 	url(r'^category/(?P<category_slug>[-\w]+)/$', category_view, name='category_detail'),
 	url(r'^product/(?P<product_slug>[-\w]+)/$', product_view, name='product_detail'),
 	url(r'^add_to_cart/$', add_to_cart_view, name='add_to_cart'),
@@ -29,7 +34,7 @@ urlpatterns = [
 	url(r'^checkout/$', checkout_view, name='checkout'),
 	url(r'^order/$', order_create_view, name='create_order'),
 	url(r'^make_order/$', make_order_view, name='make_order'),
-	url(r'^thank_you/$', TemplateView.as_view(template_name='thank_you.html'), name='thank_you'),
+	url(r'^thank_you/$', thank_you_view, name='thank_you'),
 	url(r'^account/$', account_view, name='account'),
 	url(r'^registration/$', registration_view, name='registration'),
 	url(r'^login/$', login_view, name='login'),

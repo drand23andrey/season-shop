@@ -40,7 +40,7 @@
               Каталог
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a href="{{ part.get_absolute_url }}" class="dropdown-item"><strong>Открыть каталог</strong></a>         
+              <a href="{% url 'catalog' %}" class="dropdown-item"><strong>Открыть каталог</strong></a>         
               <div class="dropdown-divider"></div>
               {% for part in parts %}
               <a href="{{ part.get_absolute_url }}" class="dropdown-item"><strong>{{ part.name }}</strong></a>
@@ -135,19 +135,19 @@
     {% for part in parts %}
     <div class="row" style="margin: 0;">
       <div class="col-lg-3">
-        <h4 class="my-4">{{part.name}}</h4>
+        <p class="my-4">{{part.name}}</p>
       </div>
       <div class="row" style="margin: 0;">
         {% for category in categories %}
           {% if category.part == part %}
-            <div class="col-lg-3" style="padding: 0;">
+            <div class="col-lg-3" >
               <div class="card h-100">
-                <a href="#"><img class="card-img-top" src="{{ category.image.url }}" alt=""></a>
+                <a href="{{ category.get_absolute_url }}"><img class="card-img-top" src="{{ category.image.url }}" alt=""></a>
                 <div class="card-body">
-                  <h4 class="card-title">
+                  <p class="card-title">
                     <!-- <a href="{{ category.get_absolute_url }}">{{ category.name }}</a> -->
-                    <a href="#">{{ category.name }}</a>
-                  </h4>
+                    <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+                  </p>
                 </div>
               </div>
           </div> 
@@ -162,23 +162,20 @@
     <p><a name='about'></a></p>
     <div class="row">
       <div class="col-lg-6">
-        <h4>Режим работы:</h4>
-        <h5>Понедельник&nbsp;&nbsp;&nbsp;09:00 – 18:30 <br>
+        <p>Режим работы:</p>
+        <p>Понедельник&nbsp;&nbsp;&nbsp;09:00 – 18:30 <br>
           Вторник&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;09:00 – 18:30 <br>
           Среда&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;09:00 – 18:30 <br>
           Четверг&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;09:00 – 18:30 <br>
           Пятница&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;09:00 – 18:30 <br>
           Суббота&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;09:00 – 16:00 <br>
-          Воскресенье&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;09:00 – 16:00<h5>
+          Воскресенье&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;09:00 – 16:00<p>
             <br>
       </div>
       <div class="col-lg-6">
-        <h4>Контакты:</h4>
-        <h5>+7 9844546961</h5>
-        <h5>+7 9844546961</h5>
+        <p>Контакты:<br>+7 9844546961<br>+7 9844546961</p>
         <br>
-        <h4>Адрес:</h4>
-        <h5>Россия, Свердловская область, Красноуфимск, улица 8 Марта, 31Б</h5>
+        <p>Адрес:<br>Россия, Свердловская область, <br>Красноуфимск, улица 8 Марта, 31Б</p>
         <br>
       </div>
     </div> 

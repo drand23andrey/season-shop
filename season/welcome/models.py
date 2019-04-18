@@ -15,11 +15,36 @@ import os
 import glob
 
 
+# сохраняет картинки с правильными именами
+def image_folder(instance, filename):
+	filename = instance.slug + '.' + filename.split('.')[1]
+	return "{0}/{1}".format(instance.slug, filename)
+
+
+#******************************************************************************
+
+class CarouselElement(models.Model):
+	name = models.CharField(max_length=100)
+	description = models.TextField()
+	image = models.ImageField(upload_to=image_folder)
+	slug = models.SlugField()	
+	def __str__(self):
+		return self.name
+
+#******************************************************************************
+
+class Part(models.Model):
+	name = models.CharField(max_length=100)
+	def __str__(self):
+		return self.name
+
 #******************************************************************************
 
 class Category(models.Model):
 	name = models.CharField(max_length=100)
-	slug = models.SlugField(blank=True)
+	part = models.ForeignKey(Part)
+	slug = models.SlugField(blank=True)	
+	image = models.ImageField(upload_to=image_folder)
 	def get_absolute_url(self):
 		return reverse('category_detail', kwargs={'category_slug': self.slug})        
 	def __str__(self):
@@ -41,16 +66,6 @@ class Brand(models.Model):
 
 #******************************************************************************
 
-# сохраняет картинки с правильными именами
-def image_folder(instance, filename):
-	filename = instance.slug + '.' + filename.split('.')[1]
-	return "{0}/{1}".format(instance.slug, filename)
-
-# class ProductManager(models.Manager):
-#     # переопределяем all() для выборки относительно флага available
-#     def all(self, *args, **kwarks):
-#         return super(ProductManager, self).get_queryset().filter(available=True)
-
 class Product(models.Model):
 
 	category = models.ForeignKey(Category)
@@ -70,24 +85,6 @@ class Product(models.Model):
 	def get_absolute_url(self):
 		return reverse('product_detail', kwargs={'product_slug': self.slug})
 		
-
-def product_available_notification(sender, instance, *args, **kwargs):
-	if instance.available:
-		await_for_notify = [notification for notification in MiddlwareNotification.objects.filter(
-			product=instance)]
-		for notification in await_for_notify:
-			notify.send(
-				instance,
-				recipient=[notification.user_name],
-				verb='Уважаемый {0}! {1}, который Вы ждете, поступил'.format(
-					notification.user_name.username,
-					instance.title),
-				description=instance.slug
-				)
-			notification.delete()
-
-
-post_save.connect(product_available_notification, sender=Product)	
 
 #******************************************************************************
 # элемент корзины
@@ -170,14 +167,14 @@ class Order(models.Model):
 
 #******************************************************************************
 
-class MiddlwareNotification(models.Model):
+# class MiddlwareNotification(models.Model):
 
-	user_name = models.ForeignKey(settings.AUTH_USER_MODEL)
-	product = models.ForeignKey(Product)
-	is_notified = models.BooleanField(default=False)
+# 	user_name = models.ForeignKey(settings.AUTH_USER_MODEL)
+# 	product = models.ForeignKey(Product)
+# 	is_notified = models.BooleanField(default=False)
 
-	def __str__(self):
-		return "Нотификация для пользователя {0} о поступлении товара {1}".format(
-	   	self.user_name.username, 
-	   	self.product.title
-	   	)
+# 	def __str__(self):
+# 		return "Нотификация для пользователя {0} о поступлении товара {1}".format(
+# 	   	self.user_name.username, 
+# 	   	self.product.title
+# 	   	)

@@ -9,7 +9,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Shop</title>
+  <title>Магазин "Сезон"</title>
 
   <!-- Bootstrap core CSS -->
   <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
@@ -24,56 +24,60 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
-      <a class="navbar-brand" href="#">Shop Name</a>
+      <a class="navbar-brand" href="{% url 'base' %}">Магазин "Сезон"</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="{% url 'base' %}">Home
+            <a class="nav-link" href="{% url 'base' %}">На главную
               <span class="sr-only">(current)</span>
             </a>
           </li>
-          {% if not request.get_full_path == '/' %}
           <li class="nav-item dropdown">
             <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Категории
+              Каталог
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              {% for category in categories %}
-              <a href="{{ category.get_absolute_url }}" class="dropdown-item">{{ category.name }}</a>
+              <a href="{{ part.get_absolute_url }}" class="dropdown-item"><strong>Открыть каталог</strong></a>         
+              <div class="dropdown-divider"></div>
+              {% for part in parts %}
+              <a href="{{ part.get_absolute_url }}" class="dropdown-item"><strong>{{ part.name }}</strong></a>
+                {% for category in categories %}
+                  {% if category.part == part %}
+                    <a href="{{ category.get_absolute_url }}" class="dropdown-item">{{ category.name }}</a>
+                  {%endif%}
+                {%endfor%} 
+                {% if not forloop.last %}                         
+                  <div class="dropdown-divider"></div>
+                {%endif%}
               {%endfor%}            
             </div>
           </li>
+          {% if request.get_full_path == '/' %}
+          <li class="nav-item">
+            <a class="nav-link" href="#about">Контакты</a>
+          </li>
           {% endif %}
-          <li class="nav-item">
-            <a class="nav-link" href="#">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Services</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Contact</a>
-          </li>
         </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item dropdown">
                 {% if not request.user.is_authenticated %}
                 <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Hello, Guest
+                  Привет, Гость!
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a href='{% url "login" %}' class="dropdown-item">Login</a>  
-                  <a href='{% url "registration" %}' class="dropdown-item">Registration</a>           
+                  <a href='{% url "login" %}' class="dropdown-item">Войти</a>  
+                  <a href='{% url "registration" %}' class="dropdown-item">Регистрация</a>           
                 </div>
                 {% else %}
                 <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Hello, {{ request.user }}
+                    Привет, {{ request.user }}!
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a href='{% url "account" %}' class="dropdown-item">My account</a>  
-                    <a href='{% url "logout" %}' class="dropdown-item">Logout</a>           
+                    <a href='{% url "account" %}' class="dropdown-item">Личный кабинет</a>  
+                    <a href='{% url "logout" %}' class="dropdown-item">Выйти</a>           
                 </div>
                 {% endif %}
             </li>
@@ -94,44 +98,22 @@
   <div class="container">
     {% block content %}
     <div class="row">
-
-      <div class="col-lg-3">
-
-        <h3 class="my-4">Категории</h1>
-        <div class="list-group">
-          {% for category in categories %}
-            <a href="{{ category.get_absolute_url }}" class="list-group-item">{{ category.name }}</a>
-          {% endfor %}          
-        </div>
-
-      </div>
-      <!-- /.col-lg-3 -->
-
-      <div class="col-lg-9">
-
-        <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
+      <div class="col-lg-12" style="padding: 0;">
+        <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel" style="margin: 0;">
           <ol class="carousel-indicators">
             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
             <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
             <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
           </ol>
           <div class="carousel-inner" role="listbox">
-            {% for product in products %}
+            {% for carousel_element in carousel_elements %}
             {% if forloop.first %}
             <div class="carousel-item active">
-              <img class="d-block img-fluid mx-auto" src="{{ product.image.url }}" style="height: 200px;" alt="First slide">
-              <br>
-              <p class="text-center">
-                  <a href="{{product.get_absolute_url}}"><button class="btn btn-primary">{{product.title}}</button></a>
-              </p>  
+              <img class="d-block img-fluid mx-auto" src="{{ carousel_element.image.url }}" alt="First slide">
             </div>
             {% else %}
             <div class="carousel-item">
-              <img class="d-block img-fluid mx-auto" src="{{ product.image.url }}" style="height: 200px;" alt="Second slide">
-              <br>
-              <p class="text-center">
-                  <a href="{{product.get_absolute_url}}"><button class="btn btn-primary">{{product.title}}</button></a>
-              </p>              
+              <img class="d-block img-fluid mx-auto" src="{{ carousel_element.image.url }}" alt="Second slide">            
             </div>
             {% endif %}
             {% endfor %}
@@ -145,36 +127,67 @@
             <span class="sr-only">Next</span>
           </a>
         </div>
-
-        <div class="row">
-
-          {% for product in products %}
-          <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100">
-              <a href="#"><img class="card-img-top" src="{{ product.image.url }}" alt=""></a>
-              <div class="card-body">
-                <h4 class="card-title">
-                  <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
-                </h4>
-                <h5>${{ product.price }}</h5>
-                <p class="card-text">{{ product.description }}</p>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!</p>
-                {% if request.user.is_authenticated %}
-                  <p class='text-center'><a href='#' class='add_to_cart' data-slug='{{ product.slug }}'><button class='btn btn-primary'>Добавить в корзину</button></a></p>
-                {% endif %}                
-              </div>
-              <div class="card-footer">
-                <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-              </div>
-            </div>
-          </div>
-          {% endfor %}
-
-        </div>
-        <!-- /.row -->
-
       </div>
-      <!-- /.col-lg-9 -->
+    </div>
+
+    <hr>
+
+    {% for part in parts %}
+    <div class="row" style="margin: 0;">
+      <div class="col-lg-3">
+        <h4 class="my-4">{{part.name}}</h4>
+      </div>
+      <div class="row" style="margin: 0;">
+        {% for category in categories %}
+          {% if category.part == part %}
+            <div class="col-lg-3" style="padding: 0;">
+              <div class="card h-100">
+                <a href="#"><img class="card-img-top" src="{{ category.image.url }}" alt=""></a>
+                <div class="card-body">
+                  <h4 class="card-title">
+                    <!-- <a href="{{ category.get_absolute_url }}">{{ category.name }}</a> -->
+                    <a href="#">{{ category.name }}</a>
+                  </h4>
+                </div>
+              </div>
+          </div> 
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>     
+    {% endfor %}
+
+    <hr>
+
+    <p><a name='about'></a></p>
+    <div class="row">
+      <div class="col-lg-6">
+        <h4>Режим работы:</h4>
+        <h5>Понедельник&nbsp;&nbsp;&nbsp;09:00 – 18:30 <br>
+          Вторник&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;09:00 – 18:30 <br>
+          Среда&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;09:00 – 18:30 <br>
+          Четверг&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;09:00 – 18:30 <br>
+          Пятница&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;09:00 – 18:30 <br>
+          Суббота&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;09:00 – 16:00 <br>
+          Воскресенье&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;09:00 – 16:00<h5>
+            <br>
+      </div>
+      <div class="col-lg-6">
+        <h4>Контакты:</h4>
+        <h5>+7 9844546961</h5>
+        <h5>+7 9844546961</h5>
+        <br>
+        <h4>Адрес:</h4>
+        <h5>Россия, Свердловская область, Красноуфимск, улица 8 Марта, 31Б</h5>
+        <br>
+      </div>
+    </div> 
+
+    <div class="row">
+      <div class="col-lg-12">
+        <iframe src="https://yandex.ru/map-widget/v1/-/CCFTYU-~" style="width:100%; height: 400px;" frameborder="1" allowfullscreen="true"></iframe>
+      </div>
+    </div> 
 
     </div>
     <!-- /.row -->
@@ -207,9 +220,9 @@
   <!-- /.container -->
 
   <!-- Footer -->
-  <footer class="py-5 bg-dark">
+  <footer class="py-3 bg-dark">
     <div class="container">
-      <p class="m-0 text-center text-white">Copyright &copy; Your Website 2019</p>
+      <p class="m-0 text-center text-white">&copy; Магазин "Сезон" 2019</p>
     </div>
     <!-- /.container -->
   </footer>

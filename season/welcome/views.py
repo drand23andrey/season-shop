@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth import login, authenticate
 from welcome.forms import OrderForm, RegistrationForm, LoginForm
-from welcome.models import Category, Product, CartItem, Cart, Order
+from welcome.models import Category, Product, CartItem, Cart, Order, Part, CarouselElement
 from django.views.generic import View
 from django.contrib.auth.models import User
 
@@ -24,12 +24,14 @@ def base_view(request):
         cart = Cart.objects.get(id=cart_id)
 
     categories = Category.objects.all()
-    products = Product.objects.all()
+    parts = Part.objects.all()
+    carousel_elements = CarouselElement.objects.all()
     
     context = {
         'categories': categories, 
-        'products': products, 
+        'parts': parts, 
         "cart": cart, 
+		'carousel_elements': carousel_elements,
     }
     return render(request, 'base.html', context)
 
@@ -238,13 +240,12 @@ def make_order_view(request):
 
 def account_view(request):
 	order = Order.objects.filter(user=request.user).order_by('-id')
+	username = request.user.username
 	categories = Category.objects.all()
-	# for item in order:
-	# 	for new_item in item.items.items.all():
-	# 		print(new_item.item_total)
 	context = {
 		'order': order,
-		'categories': categories
+		'categories': categories,
+		'username': username,
 	}
 	return render(request, 'account.html', context)
 

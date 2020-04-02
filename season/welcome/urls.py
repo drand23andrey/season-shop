@@ -20,6 +20,7 @@ from welcome.views import (
 	catalog_view,
 	part_view,
 	thank_you_view,
+	
 	)
 
 urlpatterns = [

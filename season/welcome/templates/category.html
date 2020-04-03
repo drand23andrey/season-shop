@@ -8,22 +8,22 @@
 </div>
 <div class="row">
     {%for product in products_of_category%}
-    <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100">
-              <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}" alt=""></a>
-              <div class="card-body">
-                <h4 class="card-title">
-                  <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
-                </h4>
-                <h5>${{ product.price }}</h5>
-                <p class="card-text">{{ product.description }}</p>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!</p>
-                {% if request.user.is_authenticated %}
-                  <p class='text-center'><a href='#' class='add_to_cart' data-slug='{{ product.slug }}'><button class='btn btn-primary'>Добавить в корзину</button></a></p>
-                {% endif %} 
-              </div>
-            </div>
-          </div>
+    <div class="col-lg-3 col-md-4 mb-4">
+      <div class="card h-100">
+        <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}" alt=""></a>
+        <div class="card-body">
+          <h4 class="card-title">
+            <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+          </h4>
+          <h5>${{ product.price }}</h5>
+          <p class="card-text">{{ product.description }}</p>
+          <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!</p>
+          {% if request.user.is_authenticated %}
+            <p class='text-center'><a href='#' class='add_to_cart' data-slug='{{ product.slug }}'><button class='btn btn-primary'>Добавить в корзину</button></a></p>
+          {% endif %} 
+        </div>
+      </div>
+    </div>
     {%endfor%}
 </div>
 <script src="{% static 'js/jquery.min.js' %}"></script>

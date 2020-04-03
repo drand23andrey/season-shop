@@ -98,8 +98,8 @@
   <div class="container">
     {% block content %}
     <div class="row">
-      <div class="col-lg-12" style="padding: 0;">
-        <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel" style="margin: 0;">
+      <div class="col-lg-12">
+        <div id="carouselExampleIndicators" class="slide my-4 carousel" data-ride="carousel" style="margin: 0;">
           <ol class="carousel-indicators">
             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
             <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
@@ -135,7 +135,7 @@
     {% for part in parts %}
     <div class="row" style="margin: 0;">
       <div class="col-lg-3">
-        <p class="my-4">{{part.name}}</p>
+        <h4 class="my-4">{{part.name}}</h4>
       </div>
       <div class="row" style="margin: 0;">
         {% for category in categories %}
@@ -144,10 +144,9 @@
               <div class="card h-100">
                 <a href="{{ category.get_absolute_url }}"><img class="card-img-top" src="{{ category.image.url }}" alt=""></a>
                 <div class="card-body">
-                  <p class="card-title">
-                    <!-- <a href="{{ category.get_absolute_url }}">{{ category.name }}</a> -->
-                    <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
-                  </p>
+                  <div class="card-title">
+                    <h5 href="{{ category.get_absolute_url }}">{{ category.name }}</h5>
+                  </div>
                 </div>
               </div>
           </div> 
@@ -182,7 +181,7 @@
 
     <div class="row">
       <div class="col-lg-12">
-        <iframe src="https://yandex.ru/map-widget/v1/-/CCFTYU-~" style="width:100%; height: 400px;" frameborder="1" allowfullscreen="true"></iframe>
+        <iframe class='card map' src="https://yandex.ru/map-widget/v1/-/CCFTYU-~" frameborder="1" allowfullscreen="true"></iframe>
       </div>
     </div> 
 
@@ -219,7 +218,7 @@
   <!-- Footer -->
   <footer class="py-3 bg-dark">
     <div class="container">
-      <p class="m-0 text-center text-white">&copy; Магазин "Сезон" 2019</p>
+      <p class="m-0 text-center text-white">&copy; Магазин "Сезон" 2020</p>
     </div>
     <!-- /.container -->
   </footer>

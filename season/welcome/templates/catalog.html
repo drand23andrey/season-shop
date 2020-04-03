@@ -10,7 +10,7 @@
   <div class="row" style="margin: 0;">
     {% for category in categories %}
       {% if category.part == part %}
-        <div class="col-lg-3" style="padding: 0;">
+        <div class="col-lg-3">
           <div class="card h-100">
             <a href="{{ category.get_absolute_url }}"><img class="card-img-top" src="{{ category.image.url }}" alt=""></a>
             <div class="card-body">
@@ -19,7 +19,7 @@
               </h4>
             </div>
           </div>
-      </div> 
+        </div>
       {% endif %}
     {% endfor %}
   </div>

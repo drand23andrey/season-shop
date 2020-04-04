@@ -7,18 +7,19 @@
     </div>
 </div>
 <div class="row">
-    {%for category in categories_of_part%}
-    <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100">
-              <a href="{{ category.get_absolute_url }}"><img class="card-img-top" src="{{ category.image.url }}" alt=""></a>
-              <div class="card-body">
-                <h4 class="card-title">
-                  <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
-                </h4>
-              </div>
+  {%for category in categories_of_part%}
+  <div class="col-lg-4 col-md-6 mb-4">
+          <div class="card h-100">
+            <a href="{{ category.get_absolute_url }}"><img class="card-img-top" src="{{ category.image.url }}" alt=""></a>
+            <hr class="card-hr">
+            <div class="card-body">
+              <h4 class="card-title">
+                <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+              </h4>
             </div>
           </div>
-    {%endfor%}
+        </div>
+  {%endfor%}
 </div>
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script>

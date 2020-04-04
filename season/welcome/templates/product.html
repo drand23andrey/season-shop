@@ -2,24 +2,26 @@
 {% load static %}
 
 {% block content %}
-<div class="row" style="margin-top: 20px; margin-bottom: 20px;">
-      <div class="col-sm-4">
-        <img src="{{ product.image.url }}" style="width: 100%;">
-      </div>
-      <div class="col-sm-8">
-        <h3>{{ product.title }}</h3>
-        <p>{{ product.description }}</p>
-        <p>{% lorem %}</p>
-        <hr>
-        <h5>${{ product.price }}</h5>
-        {% if request.user.is_authenticated %}
-          <a href="#" class="add_to_cart" data-slug="{{ product.slug }}"><button class="btn btn-primary" style="margin-top: 20px;">Добавить в корзину</button></a>
-        {% else %}
-          <small class='text-center'><a href='{% url "login" %}'>Войдите</a> или <a href='{% url "registration" %}'>зарегистрируйтесь</a> чтобы добавть товар в корзину.</p></small>
-        {% endif %}
-               
-      </div>      
+
+<div class="row" style="margin-top: 10px; margin-bottom: 10px;">
+  <div class="col-sm-4">
+    <div class="card">      
+      <img class="card-img-top" src="{{ product.image.url }}" style="width: 100%;">
+    </div>
+  </div>
+  <div class="col-sm-8">
+    <h4>{{ product.title }}</h4>
+    <p>{{ product.description }}</p>
+    <hr style="margin-left: 0; margin-right: 0;">
+    <h5>{{ product.price }} &#8381;</h5>
+    {% if request.user.is_authenticated %}
+      <a href="#" class="add_to_cart" data-slug="{{ product.slug }}"><button class="btn btn-primary" style="margin-top: 20px;">Добавить в корзину</button></a>
+    {% else %}
+      <small class='text-center'><a class="blue-link" href='{% url "login" %}'>Войдите</a> или <a class="blue-link" href='{% url "registration" %}'>зарегистрируйтесь</a> чтобы добавть товар в корзину.</p></small>
+    {% endif %}           
+  </div>      
 </div>
+
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script>
   // асинхронный скриптинг для корзины

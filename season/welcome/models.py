@@ -118,6 +118,22 @@ class Cart(models.Model):
     def __str__(self):
         return 'Cart №' + str(self.id)
 
+    def cart_items(self):
+        cart = self
+        cart_list = ''
+        cart_items = [(str(item.product.title) + ' --- ' + str(item.product.price) + ' &#8381;' + ' --- ' + str(item.qty) + 'шт.') for item in cart.items.all()]
+        for item in cart_items:
+            cart_list += item + '<br>'
+        return cart_list       
+    cart_items.allow_tags = True
+
+    def total_price(self):
+        return str(self.cart_total) + ' &#8381;'
+    total_price.allow_tags = True
+
+    def name(self):
+        return 'Cart №' + str(self.id)
+
     def add_to_cart(self, product_slug):
         cart = self
         product = Product.objects.get(slug=product_slug)

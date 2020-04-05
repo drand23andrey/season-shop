@@ -121,15 +121,42 @@ class Cart(models.Model):
     def cart_items(self):
         cart = self
         cart_list = ''
-        cart_items = [(str(item.product.title) + ' --- ' + str(item.product.price) + ' &#8381;' + ' --- ' + str(item.qty) + 'шт.') for item in cart.items.all()]
+        cart_items = [str(item.product.title) for item in cart.items.all()]
         for item in cart_items:
             cart_list += item + '<br>'
         return cart_list       
     cart_items.allow_tags = True
 
-    def total_price(self):
+    def item_price(self):
+        cart = self
+        item_price_list = ''
+        cart_items = [str(item.product.price) for item in cart.items.all()]
+        for item in cart_items:
+            item_price_list += item  + ' &#8381;'+ '<br>'
+        return item_price_list       
+    item_price.allow_tags = True
+    
+    def quantity(self):
+        cart = self
+        qty_list = ''
+        cart_items = [str(item.qty) for item in cart.items.all()]
+        for item in cart_items:
+            qty_list += item + '<br>'
+        return qty_list       
+    quantity.allow_tags = True
+
+    def total_item_price(self):
+        cart = self
+        total_item_price_list = ''
+        cart_items = [str(item.item_total) for item in cart.items.all()]
+        for item in cart_items:
+            total_item_price_list += item  + ' &#8381;'+ '<br>'
+        return total_item_price_list       
+    total_item_price.allow_tags = True
+
+    def cart_price(self):
         return str(self.cart_total) + ' &#8381;'
-    total_price.allow_tags = True
+    cart_price.allow_tags = True
 
     def name(self):
         return 'Cart №' + str(self.id)

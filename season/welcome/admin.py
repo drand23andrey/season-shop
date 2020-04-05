@@ -14,7 +14,7 @@ class OrderAdmin(admin.ModelAdmin):
 	actions = [make_payed]
 
 class CartAdmin(admin.ModelAdmin):
-	list_display = (Cart.name, Cart.total_price, Cart.cart_items)
+	list_display = (Cart.name, Cart.cart_items, Cart.item_price, Cart.quantity, Cart.total_item_price, Cart.cart_price)
 
 admin.site.register(Part)
 admin.site.register(Category)

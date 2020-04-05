@@ -5,7 +5,7 @@
 {% for part in parts %}
 <div class="row" style="margin: 0;">
   <div class="col-lg-3">
-    <h4 class="my-4">{{part.name}}</h4>
+    <h5 class="my-4">{{part.name}}</h5>
   </div>
   <div class="row" style="margin: 0;">
     {% for category in categories %}
@@ -15,9 +15,9 @@
             <a href="{{ category.get_absolute_url }}"><img class="card-img-top" src="{{ category.image.url }}" alt=""></a>
             <hr class="card-hr">
             <div class="card-body">
-              <h5 class="card-title">
+              <div class="card-title text-center">
                 <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
-              </h5>
+              </div>
             </div>
           </div>
         </div>

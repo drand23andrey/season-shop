@@ -99,7 +99,7 @@
     {% block content %}
     <div class="row">
       <div class="col-lg-12">
-        <div id="carouselExampleIndicators" class="slide my-4 carousel" data-ride="carousel">
+        <div id="carouselExampleIndicators" class="slide carousel" data-ride="carousel">
           <ol class="carousel-indicators">
             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
             <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
@@ -143,7 +143,7 @@
     {% for part in parts %}
     <div class="row">
       <div class="col-lg-3">
-        <h4 class="my-4">{{part.name}}</h4>
+        <h5 class="my-4">{{part.name}}</h5>
       </div>
       <div class="row" style="margin: 0;">
         {% for category in categories %}
@@ -153,8 +153,8 @@
                 <a href="{{ category.get_absolute_url }}"><img class="card-img-top" src="{{ category.image.url }}" alt=""></a>
                 <hr class="card-hr">
                 <div class="card-body">
-                  <div class="card-title">
-                    <h5 href="{{ category.get_absolute_url }}">{{ category.name }}</h5>
+                  <div class="card-title text-center">
+                    <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
                   </div>
                 </div>
               </div>

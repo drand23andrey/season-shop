@@ -2,7 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
-<h3 class='text-center'>Оформление заказа</h3>
+<h5 style="margin: 10px 0 10px 0;" class="text-center">Оформление заказа</h5>
 <hr>
 <form action='{% url "make_order" %}' method="POST">
 {% csrf_token %}

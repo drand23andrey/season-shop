@@ -80,12 +80,10 @@ p {
   margin: 0;
 }
 
-.blue-link {
-  color: rgb(0, 0, 255);
+.link {
   text-decoration: underline;
 }
 
-.blue-link:hover {
-  color: rgb(0, 0, 255);
+.link:hover {
   text-decoration: underline;
 }

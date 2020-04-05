@@ -4,17 +4,15 @@
 
 {% block content %}
 
-<h3 class="text-center">Личный кабинет пользователя {{ request.user }}</h3>
+<h5 style="margin: 10px 0 10px 0;" class="text-center">Личный кабинет пользователя {{ request.user }}</h5>
 <!-- <h4>{{ request.user.first_name }}</h4> -->
 <hr>
-<h4 class='text-center'>Ваши заказы</h4>
+<h5 style="margin: 10px 0 10px 0;" class="text-center">Ваши заказы</h5>
 <table class='table'>
-<tr style='background:lightblue;'>
-	<td class='text-center'>Номер заказа</td>
-	<td class='text-center'>Дата заказа</td>
-	<td class='text-center'>Статус заказа</td>
-	<td class='text-center'>Стоимость заказа</td>
-	<td class='text-center'>Детали заказа</td>
+<tr>
+	<td class='text-center'><strong>№</strong></td>
+	<td class='text-center'><strong>Дата заказа</strong></td>
+	<td class='text-center'><strong>Статус</strong></td>
 	<td></td>
 </tr>
 {% for item in order %}
@@ -22,10 +20,9 @@
 	<td class='text-center' style='padding-top: 20px; padding-bottom: 20px;'>{{ item.id }}</td>
 	<td class='text-center' style='padding-top: 20px; padding-bottom: 20px;'>{{ item.date }}</td>
 	<td class='text-center' style='padding-top: 20px; padding-bottom: 20px;'>{{ item.status }}</td>
-	<td class='text-center' style='padding-top: 20px; padding-bottom: 20px;'>{{ item.total }} руб.</td>
-	<td class='text-center' style='padding-top: 20px; padding-bottom: 20px;'><button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#myModal-{{ item.id }}">
-  Детали заказа
-</button></td>
+	<td class='text-center' style='padding-top: 15px; padding-bottom: 15px;'>
+		<button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#myModal-{{ item.id }}">Детали заказа</button>
+	</td>
 </tr>
 {% endfor %}
 </table>
@@ -35,37 +32,40 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-				<h5 class="modal-title" id="myModalLabel">Заказ № {{ item.id }}</h4>
+		<h5 class="modal-title" id="myModalLabel">Заказ № {{ item.id }}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body">
-      <h3>Товар</h3>
-        <table class='table'>
-					{% for order_item in item.items.items.all %}
-						<tr>
-							<td>{{ order_item.product.title }}</td>
-							<td>{{ order_item.qty }} шт.</td>
-							<td>{{ order_item.item_total }} руб.</td>
-						</tr>
-						{% endfor %}
-        		<tr>
-	        		<td></td>
-	        		<td>Итого</td>
-	        		<td><strong>{{ item.items.cart_total }} руб.</strong></td>
-	        	</tr>
-        </table>
-   		<h3>Заказчик</h3>
-   		 <p>Имя: {{ item.first_name }}</p>
-   		 <p>Фамилия: {{ item.last_name }}</p>
-   		 <p>Телефон: {{ item.phone }}</p>
-   		 <h3>Тип доставки</h3>
-   		 <p>{% if item.buying_type == 'self' %} Самовывоз {% else %}Доставка{% endif %}</p>
-   		 <p>{% if item.buying_type == 'delivery' %} {{ item.address }}{% endif %}</p>
-   		 <h3>Комментарии к заказу</h3>
-   		 <p>{{ item.comments }}</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+        <table class='table' style="margin-bottom: 0;">			
+			<td class="text-center"><strong>Товар</strong></td>
+			<td class="text-center"><strong>Цена</strong></td>
+			<td class="text-center"><strong>Кол-во</strong></td>
+			<td class="text-center"></td>
+			{% for order_item in item.items.items.all %}
+					<tr>
+						<td class="text-center" style="width: 40%;">{{ order_item.product.title }}</td>
+						<td class="text-center">{{ order_item.product.price }} &#8381;</td>
+						<td class="text-center">{{ order_item.qty }}</td>
+						<td class="text-center">{{ order_item.item_total }} &#8381;</td>
+					</tr>
+					{% endfor %}
+        	<tr>
+	        	<td></td>
+	        	<td></td>
+	        	<td class="text-center"><strong>Итого:</strong></td>
+	        	<td class="text-center"><strong>{{ item.items.cart_total }} &#8381;</strong></td>
+	        </tr>
+		</table>
+		<hr>
+   		<h5>Заказчик</h5>
+   		<p>Имя: {{ item.first_name }}</p>
+   		<p>Фамилия: {{ item.last_name }}</p>
+   		<p>Телефон: {{ item.phone }}</p>
+   		<h5>Тип доставки</h5>
+   		<p>{% if item.buying_type == 'self' %} Самовывоз {% else %}Доставка{% endif %}</p>
+   		<p>{% if item.buying_type == 'delivery' %} {{ item.address }}{% endif %}</p>
+   		<h5>Комментарии к заказу</h5>
+   		<p>{{ item.comments }}</p>
       </div>
     </div>
   </div>

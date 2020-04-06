@@ -155,32 +155,8 @@ class Cart(models.Model):
     def __str__(self):
         return 'Корзина №' + str(self.id)
 
-    def cart_item(self):
-        cart = self
-        return_list = [str(item.product.title) for item in cart.items.all()]        
-        return '<br>'.join(return_list)      
-    cart_item.allow_tags = True
-
-    def item_price(self):
-        cart = self
-        return_list = [str(item.product.price) + ' &#8381;' for item in cart.items.all()]
-        return '<br>'.join(return_list)     
-    item_price.allow_tags = True
-    
-    def item_quantity(self):
-        cart = self
-        return_list = [str(item.qty) for item in cart.items.all()]
-        return '<br>'.join(return_list)       
-    item_quantity.allow_tags = True
-
-    def total_item_price(self):
-        cart = self
-        return_list = [str(item.item_total) + ' &#8381;' for item in cart.items.all()]
-        return '<br>'.join(return_list)       
-    total_item_price.allow_tags = True
-
     def cart_price(self):
-        return str(self.cart_total) + ' &#8381;'
+        return '<strong>' + str(self.cart_total) + ' &#8381;' + '</strong>'
     cart_price.allow_tags = True
 
     def cart(self):
@@ -195,9 +171,10 @@ class Cart(models.Model):
         return_table = '<table>'
         for n in range(len(itms)):
             s = '<tr>' +\
-                '<th style="width: 100px; padding: 0">' + str(prices[n]) + '</th>' +\
-                '<th style="width: 50px; padding: 0">' + str(qtys[n]) + 'шт.' + '</th>' +\
-                '<th style="width: 100px; padding: 0">' + str(t_prices[n]) + '</th>' +\
+                '<th style="width: 85px; padding: 0; text-align: right;">' + str(prices[n]) + '</th>' +\
+                '<th style="width: 50px; padding: 0; text-align: right;">' + str(qtys[n]) + 'шт.' + '</th>' +\
+                '<th style="width: 90px; padding: 0; text-align: right;">' + str(t_prices[n]) + '</th>' +\
+                '<th style="width: 20px; padding: 0"></th>' +\
                 '<th style="padding: 0">' + str(itms[n]) + '</th>' +\
                 '</tr>'
             return_table += s
@@ -247,32 +224,45 @@ ORDER_STATUS_CHOICES = (
 
 class Order(models.Model):
 
-	user = models.ForeignKey(settings.AUTH_USER_MODEL)
-	items = models.ForeignKey(Cart)
-	total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
-	first_name = models.CharField(max_length=200)
-	last_name = models.CharField(max_length=200)
-	phone = models.CharField(max_length=20)
-	buying_type = models.CharField(max_length=40, choices=(('Самовывоз', 'Самовывоз'), 
-		('Доставка', 'Доставка')), default='Самовывоз')
-	address = models.CharField(max_length=255, blank=True)
-	date = models.DateTimeField(auto_now_add=True)
-	comments = models.TextField()
-	status = models.CharField(max_length=100, choices=ORDER_STATUS_CHOICES, default=ORDER_STATUS_CHOICES[0][0])
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    items = models.ForeignKey(Cart)
+    total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
+    first_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200)
+    phone = models.CharField(max_length=20)
+    buying_type = models.CharField(max_length=40, choices=(('Самовывоз', 'Самовывоз'), 
+        ('Доставка', 'Доставка')), default='Самовывоз')
+    address = models.CharField(max_length=255, blank=True)
+    date = models.DateTimeField(auto_now_add=True)
+    comments = models.TextField(blank=True)
+    status = models.CharField(max_length=100, choices=ORDER_STATUS_CHOICES, default=ORDER_STATUS_CHOICES[0][0])
 
-	def __str__(self):
-		return "Заказ №{0}".format(str(self.id))
+    def order(self):
+        return 'Заказ №' + str(self.id)
 
-#******************************************************************************
+    def order_price(self):
+        return '<strong>' + str(self.items.cart_total) + ' &#8381;' + '</strong>'
+    order_price.allow_tags = True
 
-# class MiddlwareNotification(models.Model):
+    def cart_items(self):
+        cart = self.items
+        prices = [str(item.product.price) + ' &#8381;' for item in cart.items.all()]
+        qtys = [str(item.qty) for item in cart.items.all()]
+        t_prices = [str(item.item_total) + ' &#8381;' for item in cart.items.all()]
+        itms = [str(item.product.title) for item in cart.items.all()]
+        return_table = '<table>'
+        for n in range(len(itms)):
+            s = '<tr>' +\
+                '<th style="width: 85px; padding: 0; text-align: right;">' + str(prices[n]) + '</th>' +\
+                '<th style="width: 50px; padding: 0; text-align: right;">' + str(qtys[n]) + 'шт.' + '</th>' +\
+                '<th style="width: 90px; padding: 0; text-align: right;">' + str(t_prices[n]) + '</th>' +\
+                '<th style="width: 20px; padding: 0"></th>' +\
+                '<th style="padding: 0">' + str(itms[n]) + '</th>' +\
+                '</tr>'
+            return_table += s
+        return_table += '</table>'
+        return return_table     
+    cart_items.allow_tags = True
 
-# 	user_name = models.ForeignKey(settings.AUTH_USER_MODEL)
-# 	product = models.ForeignKey(Product)
-# 	is_notified = models.BooleanField(default=False)
-
-# 	def __str__(self):
-# 		return "Нотификация для пользователя {0} о поступлении товара {1}".format(
-# 	   	self.user_name.username, 
-# 	   	self.product.title
-# 	   	)
+    def __str__(self):
+        return "Заказ №{0}".format(str(self.id))

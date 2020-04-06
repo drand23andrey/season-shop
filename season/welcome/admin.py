@@ -5,18 +5,33 @@ from django.contrib import admin
 from welcome.models import Category, Brand, Product, CartItem, Cart, Order, Part, CarouselElement
 
 
-def make_payed(modeladmin, request, queryset):
-    queryset.update(status='Оплачен')
-make_payed.short_description = "Пометить как оплаченные"
+def make_accepted(modeladmin, request, queryset):
+    queryset.update(status='Принят в обработку')
+make_accepted.short_description = " Пометить выбранные как 'Принят в обработку'"
+
+def make_wait_payed(modeladmin, request, queryset):
+    queryset.update(status='Ожидает оплаты')
+make_wait_payed.short_description = " Пометить выбранные как 'Ожидает оплаты'"
+
+def make_payed_process(modeladmin, request, queryset):
+    queryset.update(status='Оплачен, выполняется')
+make_payed_process.short_description = " Пометить выбранные как 'Оплачен, выполняется'"
+
+def make_wait_get(modeladmin, request, queryset):
+    queryset.update(status='Ожидает получения')
+make_wait_get.short_description = " Пометить выбранные как 'Ожидает получения'"
+
+def make_complete(modeladmin, request, queryset):
+    queryset.update(status='Выполнен')
+make_complete.short_description = " Пометить выбранные как 'Выполнен'"
 
 class OrderAdmin(admin.ModelAdmin):
     list_filter = ['status']
-    actions = [make_payed]
+    actions = [make_accepted, make_wait_payed, make_payed_process, make_wait_get, make_complete]
+    list_display = (Order.order, "status", Order.order_price, Order.cart_items)
 
 class CartAdmin(admin.ModelAdmin):
-    # list_display = (Cart.cart, Cart.cart_item, Cart.item_price, Cart.item_quantity, Cart.total_item_price, Cart.cart_price)
-    list_display = (Cart.cart, Cart.cart_price, Cart.cart_items)
-    
+    list_display = (Cart.cart, Cart.cart_price, Cart.cart_items)    
 
 admin.site.register(Part)
 admin.site.register(Category)

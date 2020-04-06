@@ -10,11 +10,13 @@ def make_payed(modeladmin, request, queryset):
 make_payed.short_description = "Пометить как оплаченные"
 
 class OrderAdmin(admin.ModelAdmin):
-	list_filter = ['status']
-	actions = [make_payed]
+    list_filter = ['status']
+    actions = [make_payed]
 
 class CartAdmin(admin.ModelAdmin):
-	list_display = (Cart.name, Cart.cart_items, Cart.item_price, Cart.quantity, Cart.total_item_price, Cart.cart_price)
+    # list_display = (Cart.cart, Cart.cart_item, Cart.item_price, Cart.item_quantity, Cart.total_item_price, Cart.cart_price)
+    list_display = (Cart.cart, Cart.cart_price, Cart.cart_items)
+    
 
 admin.site.register(Part)
 admin.site.register(Category)

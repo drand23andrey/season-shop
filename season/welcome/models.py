@@ -7,7 +7,7 @@ from django.db.models import Q
 from django.db.models.signals import pre_save, post_save
 from django.utils.text import slugify
 from django.core.urlresolvers import reverse
-from transliterate import translit
+from transliterate import translit, exceptions
 from notifications.signals import notify
 from django.contrib.auth.models import User
 from PIL import Image
@@ -17,19 +17,29 @@ import glob
 
 # сохраняет картинки с правильными именами
 def image_folder(instance, filename):
-	filename = instance.slug + '.' + filename.split('.')[1]
-	return "{0}/{1}".format(instance.slug, filename)
+    filename = instance.slug + '.' + filename.split('.')[1]
+    return "{0}/{1}".format(instance.slug, filename)
 
 
 #******************************************************************************
 
 class CarouselElement(models.Model):
-	name = models.CharField(max_length=100)
-	description = models.TextField()
-	image = models.ImageField(upload_to=image_folder)
-	slug = models.SlugField()	
-	def __str__(self):
-		return self.name
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    image = models.ImageField(upload_to=image_folder)
+    slug = models.SlugField(blank=True)	
+    def __str__(self):
+        return self.name
+
+def pre_save_carousel_element_slug(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        try:
+            slug = slugify(translit(str(instance.name), reversed=True))
+        except exceptions.LanguageDetectionError:
+            slug = slugify(str(instance.name))
+        instance.slug = slug
+
+pre_save.connect(pre_save_carousel_element_slug, sender=CarouselElement)
 
 #******************************************************************************
 
@@ -42,9 +52,12 @@ class Part(models.Model):
 		return self.name
 
 def pre_save_part_slug(sender, instance, *args, **kwargs):
-	if not instance.slug:
-		slug = slugify(translit(str(instance.name), reversed=True))
-		instance.slug = slug
+    if not instance.slug:
+        try:
+            slug = slugify(translit(str(instance.name), reversed=True))
+        except exceptions.LanguageDetectionError:
+            slug = slugify(str(instance.name))
+        instance.slug = slug
 
 pre_save.connect(pre_save_part_slug, sender=Part)
 
@@ -61,9 +74,12 @@ class Category(models.Model):
 		return self.name
 
 def pre_save_category_slug(sender, instance, *args, **kwargs):
-	if not instance.slug:
-		slug = slugify(translit(str(instance.name), reversed=True))
-		instance.slug = slug
+    if not instance.slug:
+        try:
+            slug = slugify(translit(str(instance.name), reversed=True))
+        except exceptions.LanguageDetectionError:
+            slug = slugify(str(instance.name))
+        instance.slug = slug
 
 pre_save.connect(pre_save_category_slug, sender=Category)
 
@@ -71,8 +87,19 @@ pre_save.connect(pre_save_category_slug, sender=Category)
 
 class Brand(models.Model):
 	name = models.CharField(max_length=100)
+	slug = models.SlugField(blank=True)
 	def __str__(self):
 		return self.name
+
+def pre_save_brand_slug(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        try:
+            slug = slugify(translit(str(instance.name), reversed=True))
+        except exceptions.LanguageDetectionError:
+            slug = slugify(str(instance.name))
+        instance.slug = slug
+
+pre_save.connect(pre_save_brand_slug, sender=Brand)
 
 #******************************************************************************
 
@@ -81,8 +108,8 @@ class Product(models.Model):
 	category = models.ForeignKey(Category)
 	brand = models.ForeignKey(Brand)
 	title = models.CharField(max_length=120)
-	slug = models.SlugField()
-	description = models.TextField()
+	slug = models.SlugField(blank=True)
+	description = models.TextField(blank=True)
 	image = models.ImageField(upload_to=image_folder)
 	price = models.DecimalField(max_digits=9, decimal_places=2)
 	available = models.BooleanField(default=True)
@@ -94,6 +121,16 @@ class Product(models.Model):
     # для ссылок на обьекты
 	def get_absolute_url(self):
 		return reverse('product_detail', kwargs={'product_slug': self.slug})
+
+def pre_save_product_slug(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        try:
+            slug = slugify(translit(str(instance.title), reversed=True))
+        except exceptions.LanguageDetectionError:
+            slug = slugify(str(instance.title))
+        instance.slug = slug
+
+pre_save.connect(pre_save_product_slug, sender=Product)
 		
 
 #******************************************************************************
@@ -116,50 +153,57 @@ class Cart(models.Model):
     cart_total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
 
     def __str__(self):
-        return 'Cart №' + str(self.id)
+        return 'Корзина №' + str(self.id)
 
-    def cart_items(self):
+    def cart_item(self):
         cart = self
-        cart_list = ''
-        cart_items = [str(item.product.title) for item in cart.items.all()]
-        for item in cart_items:
-            cart_list += item + '<br>'
-        return cart_list       
-    cart_items.allow_tags = True
+        return_list = [str(item.product.title) for item in cart.items.all()]        
+        return '<br>'.join(return_list)      
+    cart_item.allow_tags = True
 
     def item_price(self):
         cart = self
-        item_price_list = ''
-        cart_items = [str(item.product.price) for item in cart.items.all()]
-        for item in cart_items:
-            item_price_list += item  + ' &#8381;'+ '<br>'
-        return item_price_list       
+        return_list = [str(item.product.price) + ' &#8381;' for item in cart.items.all()]
+        return '<br>'.join(return_list)     
     item_price.allow_tags = True
     
-    def quantity(self):
+    def item_quantity(self):
         cart = self
-        qty_list = ''
-        cart_items = [str(item.qty) for item in cart.items.all()]
-        for item in cart_items:
-            qty_list += item + '<br>'
-        return qty_list       
-    quantity.allow_tags = True
+        return_list = [str(item.qty) for item in cart.items.all()]
+        return '<br>'.join(return_list)       
+    item_quantity.allow_tags = True
 
     def total_item_price(self):
         cart = self
-        total_item_price_list = ''
-        cart_items = [str(item.item_total) for item in cart.items.all()]
-        for item in cart_items:
-            total_item_price_list += item  + ' &#8381;'+ '<br>'
-        return total_item_price_list       
+        return_list = [str(item.item_total) + ' &#8381;' for item in cart.items.all()]
+        return '<br>'.join(return_list)       
     total_item_price.allow_tags = True
 
     def cart_price(self):
         return str(self.cart_total) + ' &#8381;'
     cart_price.allow_tags = True
 
-    def name(self):
-        return 'Cart №' + str(self.id)
+    def cart(self):
+        return 'Корзина №' + str(self.id)
+
+    def cart_items(self):
+        cart = self
+        prices = [str(item.product.price) + ' &#8381;' for item in cart.items.all()]
+        qtys = [str(item.qty) for item in cart.items.all()]
+        t_prices = [str(item.item_total) + ' &#8381;' for item in cart.items.all()]
+        itms = [str(item.product.title) for item in cart.items.all()]
+        return_table = '<table>'
+        for n in range(len(itms)):
+            s = '<tr>' +\
+                '<th style="width: 100px; padding: 0">' + str(prices[n]) + '</th>' +\
+                '<th style="width: 50px; padding: 0">' + str(qtys[n]) + 'шт.' + '</th>' +\
+                '<th style="width: 100px; padding: 0">' + str(t_prices[n]) + '</th>' +\
+                '<th style="padding: 0">' + str(itms[n]) + '</th>' +\
+                '</tr>'
+            return_table += s
+        return_table += '</table>'
+        return return_table     
+    cart_items.allow_tags = True
 
     def add_to_cart(self, product_slug):
         cart = self

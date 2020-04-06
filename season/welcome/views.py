@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth import login, authenticate
 from welcome.forms import OrderForm, RegistrationForm, LoginForm
-from welcome.models import Category, Product, CartItem, Cart, Order, Part, CarouselElement
+from welcome.models import Category, SubCategory, Product, CartItem, Cart, Order, Part, CarouselElement
 from django.views.generic import View
 from django.contrib.auth.models import User
 
@@ -92,15 +92,15 @@ def part_view(request, part_slug):
 		cart_id = cart.id
 		request.session['cart_id'] = cart_id
 		cart = Cart.objects.get(id=cart_id)
-	part = Part.objects.get(slug=part_slug)
 	parts = Part.objects.all()
 	categories = Category.objects.all()
+	part = Part.objects.get(slug=part_slug)
 	categories_of_part = Category.objects.filter(part=part)
 	context = {
-        'part': part, 
-		'categories': categories, 
-		'categories_of_part': categories_of_part,
 		'parts': parts, 
+		'categories': categories, 
+        'part': part, 
+		'categories_of_part': categories_of_part,
 		'cart': cart
     }
 	return render(request, 'part.html', context)
@@ -116,19 +116,43 @@ def category_view(request, category_slug):
 		cart_id = cart.id
 		request.session['cart_id'] = cart_id
 		cart = Cart.objects.get(id=cart_id)
-	category = Category.objects.get(slug=category_slug)
-	categories = Category.objects.all()
 	parts = Part.objects.all()
-	price_filter_type = request.GET.get('price_filter_type')
-	products_of_category = Product.objects.filter(category=category)
+	categories = Category.objects.all()
+	category = Category.objects.get(slug=category_slug)
+	subcategories_of_category = SubCategory.objects.filter(category=category)
 	context = {
-		'category': category, 
-        'categories': categories, 
         'parts': parts, 
-		'products_of_category': products_of_category,
+		'categories': categories, 
+		'category': category, 
+		'subcategories_of_category': subcategories_of_category,
 		'cart': cart
     }
 	return render(request, 'category.html', context)
+
+def subcategory_view(request, subcategory_slug):
+    try:
+        cart_id = request.session['cart_id']
+        cart = Cart.objects.get(id=cart_id)
+        request.session['total'] = cart.items.count()
+    except:
+        cart = Cart()
+        cart.save()
+        cart_id = cart.id
+        request.session['cart_id'] = cart_id
+        cart = Cart.objects.get(id=cart_id)
+    parts = Part.objects.all()
+    categories = Category.objects.all()
+    subcategory = SubCategory.objects.get(slug=subcategory_slug)
+    price_filter_type = request.GET.get('price_filter_type')
+    products_of_subcategory = Product.objects.filter(subcategory=subcategory)
+    context = {
+        'parts': parts, 
+        'categories': categories, 
+        'subcategory': subcategory, 
+        'products_of_subcategory': products_of_subcategory,
+        'cart': cart
+    }
+    return render(request, 'subcategory.html', context)
 
 def cart_view(request):
     try:

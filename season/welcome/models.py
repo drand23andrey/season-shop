@@ -84,7 +84,27 @@ def pre_save_category_slug(sender, instance, *args, **kwargs):
 pre_save.connect(pre_save_category_slug, sender=Category)
 
 #******************************************************************************
+class SubCategory(models.Model):
+	name = models.CharField(max_length=100)
+	category = models.ForeignKey(Category, default = '')
+	slug = models.SlugField(blank=True)	
+	image = models.ImageField(upload_to=image_folder)
+	def get_absolute_url(self):
+		return reverse('subcategory_detail', kwargs={'subcategory_slug': self.slug})        
+	def __str__(self):
+		return self.name
 
+def pre_save_subcategory_slug(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        try:
+            slug = slugify(translit(str(instance.name), reversed=True))
+        except exceptions.LanguageDetectionError:
+            slug = slugify(str(instance.name))
+        instance.slug = slug
+
+pre_save.connect(pre_save_subcategory_slug, sender=SubCategory)
+
+#******************************************************************************
 class Brand(models.Model):
 	name = models.CharField(max_length=100)
 	slug = models.SlugField(blank=True)
@@ -105,7 +125,7 @@ pre_save.connect(pre_save_brand_slug, sender=Brand)
 
 class Product(models.Model):
 
-	category = models.ForeignKey(Category)
+	subcategory = models.ForeignKey(SubCategory, default='')
 	brand = models.ForeignKey(Brand)
 	title = models.CharField(max_length=120)
 	slug = models.SlugField(blank=True)

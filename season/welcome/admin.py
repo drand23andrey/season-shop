@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from welcome.models import Category, Brand, Product, CartItem, Cart, Order, Part, CarouselElement
+from welcome.models import Category, SubCategory, Brand, Product, CartItem, Cart, Order, Part, CarouselElement
 
 
 def make_accepted(modeladmin, request, queryset):
@@ -35,6 +35,7 @@ class CartAdmin(admin.ModelAdmin):
 
 admin.site.register(Part)
 admin.site.register(Category)
+admin.site.register(SubCategory)
 admin.site.register(Brand)
 admin.site.register(Product)
 admin.site.register(CartItem)

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="row">
+    <div class="col-sm-4">
+        <h5>{{ subcategory.name }}</h5>
+    </div>
+</div>
+<div class="row">
+  {%for product in products_of_subcategory%}
+    <div class="col-lg-3 col-md-4 mb-4">
+      <div class="card h-100">
+        <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}" alt=""></a>
+        <hr class="card-hr">
+        <div class="card-body">
+          <div class="card-title text-center">
+            <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+          </div>
+          <div style="margin: 10px 0 10px 0;" class="text-center">
+            <a>{{ product.price }} &#8381;</a>
+          </div>          
+          {% if request.user.is_authenticated %}
+            <p class='text-center'>
+              <a href='#' class='add_to_cart' data-slug='{{ product.slug }}'>
+                <button class='btn btn-primary'>Добавить в корзину</button>
+              </a>
+            </p>
+          {% endif %} 
+        </div>
+      </div>
+    </div>
+  {%endfor%}
+</div>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script>
+  // асинхронный скриптинг для корзины
+  $(document).ready(function(){
+    $('.add_to_cart').on('click', function(e){
+      e.preventDefault()
+      product_slug = $(this).attr('data-slug')
+      // console.log(product_slug)
+      data = {
+        product_slug: product_slug  
+      }
+      $.ajax({
+        type: 'GET',
+        url: '{% url "add_to_cart" %}',
+        data: data, 
+        success: function(data){
+          // console.log(data)
+          $('#cart_count').html(data.cart_total)
+        }
+      })
+    })
+  })  
+</script>
+{% endblock content %}

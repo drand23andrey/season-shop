@@ -6,6 +6,7 @@ from django.views.generic import TemplateView
 from welcome.views import (
 	base_view, 
 	category_view, 
+	subcategory_view,
 	product_view, 
 	cart_view, 
 	add_to_cart_view, 
@@ -27,6 +28,7 @@ urlpatterns = [
 	url(r'^catalog/$', catalog_view, name='catalog'),
 	url(r'^part/(?P<part_slug>[-\w]+)/$', part_view, name='part_detail'),
 	url(r'^category/(?P<category_slug>[-\w]+)/$', category_view, name='category_detail'),
+	url(r'^subcategory/(?P<subcategory_slug>[-\w]+)/$', subcategory_view, name='subcategory_detail'),
 	url(r'^product/(?P<product_slug>[-\w]+)/$', product_view, name='product_detail'),
 	url(r'^add_to_cart/$', add_to_cart_view, name='add_to_cart'),
 	url(r'^remove_from_cart/$', remove_from_cart_view, name='remove_from_cart'),

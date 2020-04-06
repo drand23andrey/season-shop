@@ -7,28 +7,20 @@
     </div>
 </div>
 <div class="row">
-    {%for product in products_of_category%}
-    <div class="col-lg-3 col-md-4 mb-4">
-      <div class="card h-100">
-        <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}" alt=""></a>
-        <hr class="card-hr">
-        <div class="card-body">
-          <div class="card-title text-center">
-            <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+    {%for subcategory in subcategories_of_category%}
+      {% if subcategory.category == category %}
+        <div class="col-lg-3">
+          <div class="card h-100">
+            <a href="{{ subcategory.get_absolute_url }}"><img class="card-img-top" src="{{ subcategory.image.url }}" alt=""></a>
+            <hr class="card-hr">
+            <div class="card-body">
+              <div class="card-title text-center">
+                <a href="{{ subcategory.get_absolute_url }}">{{ subcategory.name }}</a>
+              </div>
+            </div>
           </div>
-          <div style="margin: 10px 0 10px 0;" class="text-center">
-            <a>{{ product.price }} &#8381;</a>
-          </div>          
-          {% if request.user.is_authenticated %}
-            <p class='text-center'>
-              <a href='#' class='add_to_cart' data-slug='{{ product.slug }}'>
-                <button class='btn btn-primary'>Добавить в корзину</button>
-              </a>
-            </p>
-          {% endif %} 
         </div>
-      </div>
-    </div>
+      {% endif %}
     {%endfor%}
 </div>
 <script src="{% static 'js/jquery.min.js' %}"></script>

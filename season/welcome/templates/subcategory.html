@@ -2,13 +2,13 @@
 {% load static %}
 {% block content %}
 <div class="row">
-    <div class="col-sm-4">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
         <h5>{{ subcategory.name }}</h5>
     </div>
 </div>
 <div class="row">
   {%for product in products_of_subcategory%}
-    <div class="col-lg-3 col-md-4 mb-4">
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
       <div class="card h-100">
         <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}" alt=""></a>
         <hr class="card-hr">

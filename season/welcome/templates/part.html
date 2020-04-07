@@ -2,13 +2,13 @@
 {% load static %}
 {% block content %}
 <div class="row">
-    <div class="col-sm-4">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
         <h5>{{ part.name }}</h5>
     </div>
 </div>
 <div class="row">
   {%for category in categories_of_part%}
-  <div class="col-lg-4 col-md-6 mb-4">
+  <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
           <div class="card h-100">
             <a href="{{ category.get_absolute_url }}"><img class="card-img-top" src="{{ category.image.url }}" alt=""></a>
             <hr class="card-hr">

@@ -27,7 +27,7 @@ def image_folder(instance, filename):
 class CarouselElement(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='https://cdn.lifehacker.ru/wp-content/uploads/2014/05/frame_1581322506-1140x570.jpg')
+    image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
     slug = models.SlugField(blank=True)	
     def __str__(self):
         return self.name
@@ -47,7 +47,7 @@ pre_save.connect(pre_save_carousel_element_slug, sender=CarouselElement)
 class Part(models.Model):
 	name = models.CharField(max_length=100)
 	slug = models.SlugField(blank=True)	
-	image = models.ImageField(upload_to=image_folder, default='')
+	image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
 	def get_absolute_url(self):
 		return reverse('part_detail', kwargs={'part_slug': self.slug})   
 	def __str__(self):
@@ -69,7 +69,7 @@ class Category(models.Model):
 	name = models.CharField(max_length=100)
 	part = models.ForeignKey(Part, on_delete=models.CASCADE)
 	slug = models.SlugField(blank=True)	
-	image = models.ImageField(upload_to=image_folder)
+	image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
 	def get_absolute_url(self):
 		return reverse('category_detail', kwargs={'category_slug': self.slug})        
 	def __str__(self):
@@ -90,7 +90,7 @@ class SubCategory(models.Model):
 	name = models.CharField(max_length=100)
 	category = models.ForeignKey(Category, default = '', on_delete=models.CASCADE)
 	slug = models.SlugField(blank=True)	
-	image = models.ImageField(upload_to=image_folder)
+	image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
 	def get_absolute_url(self):
 		return reverse('subcategory_detail', kwargs={'subcategory_slug': self.slug})        
 	def __str__(self):
@@ -132,7 +132,7 @@ class Product(models.Model):
 	title = models.CharField(max_length=120)
 	slug = models.SlugField(blank=True)
 	description = models.TextField(blank=True)
-	image = models.ImageField(upload_to=image_folder)
+	image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
 	price = models.DecimalField(max_digits=9, decimal_places=2)
 	available = models.BooleanField(default=True)
     # objects = ProductManager()

@@ -35,7 +35,12 @@
               <span class="sr-only">(current)</span>
             </a>
           </li>
-          <li class="nav-item dropdown">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'catalog' %}">Каталог
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <!-- <li class="nav-item dropdown">
             <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Каталог
             </a>
@@ -54,7 +59,7 @@
                 {%endif%}
               {%endfor%}            
             </div>
-          </li>
+          </li> -->
           {% if request.get_full_path == '/' %}
           <li class="nav-item">
             <a class="nav-link" href="#about">Контакты</a>

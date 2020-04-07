@@ -27,7 +27,7 @@ def image_folder(instance, filename):
 class CarouselElement(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to=image_folder)
+    image = models.ImageField(upload_to='https://cdn.lifehacker.ru/wp-content/uploads/2014/05/frame_1581322506-1140x570.jpg')
     slug = models.SlugField(blank=True)	
     def __str__(self):
         return self.name
@@ -47,6 +47,7 @@ pre_save.connect(pre_save_carousel_element_slug, sender=CarouselElement)
 class Part(models.Model):
 	name = models.CharField(max_length=100)
 	slug = models.SlugField(blank=True)	
+	image = models.ImageField(upload_to=image_folder, default='')
 	def get_absolute_url(self):
 		return reverse('part_detail', kwargs={'part_slug': self.slug})   
 	def __str__(self):

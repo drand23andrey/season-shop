@@ -140,30 +140,21 @@
 
     <hr>
 
-    {% for part in parts %}
     <div class="row">
-      <div class="col-lg-3">
-        <h5 class="my-4">{{part.name}}</h5>
-      </div>
-      <div class="row" style="margin: 0;">
-        {% for category in categories %}
-          {% if category.part == part %}
-            <div class="col-lg-3" >
-              <div class="card h-100">
-                <a href="{{ category.get_absolute_url }}"><img class="card-img-top" src="{{ category.image.url }}" alt=""></a>
-                <hr class="card-hr">
-                <div class="card-body">
-                  <div class="card-title text-center">
-                    <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
-                  </div>
-                </div>
+      {% for part in parts %}
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12" >
+          <div class="card h-100">
+            <a href="{{ part.get_absolute_url }}"><img class="card-img-top" src="{{ part.image.url }}" alt=""></a>
+            <hr class="card-hr">
+            <div class="card-body">
+              <div class="card-title text-center">
+                <a href="{{ part.get_absolute_url }}">{{ part.name }}</a>
               </div>
-          </div> 
-          {% endif %}
-        {% endfor %}
-      </div>
-    </div>     
-    {% endfor %}
+            </div>
+          </div>
+        </div> 
+      {% endfor %}
+    </div>
 
     <hr>
 

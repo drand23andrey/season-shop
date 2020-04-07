@@ -6,7 +6,8 @@ from django.db import models
 from django.db.models import Q
 from django.db.models.signals import pre_save, post_save
 from django.utils.text import slugify
-from django.core.urlresolvers import reverse
+from django.utils.html import format_html
+from django.urls import reverse
 from transliterate import translit, exceptions
 from notifications.signals import notify
 from django.contrib.auth.models import User
@@ -65,7 +66,7 @@ pre_save.connect(pre_save_part_slug, sender=Part)
 
 class Category(models.Model):
 	name = models.CharField(max_length=100)
-	part = models.ForeignKey(Part)
+	part = models.ForeignKey(Part, on_delete=models.CASCADE)
 	slug = models.SlugField(blank=True)	
 	image = models.ImageField(upload_to=image_folder)
 	def get_absolute_url(self):
@@ -86,7 +87,7 @@ pre_save.connect(pre_save_category_slug, sender=Category)
 #******************************************************************************
 class SubCategory(models.Model):
 	name = models.CharField(max_length=100)
-	category = models.ForeignKey(Category, default = '')
+	category = models.ForeignKey(Category, default = '', on_delete=models.CASCADE)
 	slug = models.SlugField(blank=True)	
 	image = models.ImageField(upload_to=image_folder)
 	def get_absolute_url(self):
@@ -125,8 +126,8 @@ pre_save.connect(pre_save_brand_slug, sender=Brand)
 
 class Product(models.Model):
 
-	subcategory = models.ForeignKey(SubCategory, default='')
-	brand = models.ForeignKey(Brand)
+	subcategory = models.ForeignKey(SubCategory, default='', on_delete=models.CASCADE)
+	brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
 	title = models.CharField(max_length=120)
 	slug = models.SlugField(blank=True)
 	description = models.TextField(blank=True)
@@ -157,7 +158,7 @@ pre_save.connect(pre_save_product_slug, sender=Product)
 # элемент корзины
 class CartItem(models.Model):
 
-    product = models.ForeignKey(Product)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     qty = models.PositiveIntegerField(default=1)
     item_total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
 
@@ -176,8 +177,7 @@ class Cart(models.Model):
         return 'Корзина №' + str(self.id)
 
     def cart_price(self):
-        return '<strong>' + str(self.cart_total) + ' &#8381;' + '</strong>'
-    cart_price.allow_tags = True
+        return format_html('<strong>' + str(self.cart_total) + ' &#8381;' + '</strong>')
 
     def cart(self):
         return 'Корзина №' + str(self.id)
@@ -199,8 +199,7 @@ class Cart(models.Model):
                 '</tr>'
             return_table += s
         return_table += '</table>'
-        return return_table     
-    cart_items.allow_tags = True
+        return format_html(return_table)     
 
     def add_to_cart(self, product_slug):
         cart = self
@@ -244,8 +243,8 @@ ORDER_STATUS_CHOICES = (
 
 class Order(models.Model):
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    items = models.ForeignKey(Cart)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    items = models.ForeignKey(Cart, on_delete=models.CASCADE)
     total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
@@ -261,8 +260,7 @@ class Order(models.Model):
         return 'Заказ №' + str(self.id)
 
     def order_price(self):
-        return '<strong>' + str(self.items.cart_total) + ' &#8381;' + '</strong>'
-    order_price.allow_tags = True
+        return format_html('<strong>' + str(self.items.cart_total) + ' &#8381;' + '</strong>')
 
     def cart_items(self):
         cart = self.items
@@ -281,8 +279,7 @@ class Order(models.Model):
                 '</tr>'
             return_table += s
         return_table += '</table>'
-        return return_table     
-    cart_items.allow_tags = True
+        return format_html(return_table)     
 
     def __str__(self):
         return "Заказ №{0}".format(str(self.id))

@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from decimal import Decimal
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, JsonResponse
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth import login, authenticate
 from welcome.forms import OrderForm, RegistrationForm, LoginForm
 from welcome.models import Category, SubCategory, Product, CartItem, Cart, Order, Part, CarouselElement

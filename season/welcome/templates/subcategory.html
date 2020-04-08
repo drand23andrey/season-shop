@@ -7,28 +7,31 @@
     </div>
 </div>
 <div class="row">
-  {%for product in products_of_subcategory%}
-    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
-      <div class="card h-100">
-        <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}" alt=""></a>
-        <hr class="card-hr">
-        <div class="card-body">
-          <div class="card-title text-center">
-            <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+  {%for product in products_of_subcategory%}    
+    {% if product.available %}
+      <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12
+      col-12">
+        <div class="card h-100">
+          <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}" alt=""></a>
+          <hr class="card-hr">
+          <div class="card-body">
+            <div class="card-title text-center">
+              <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+            </div>
+            <div style="margin: 10px 0 10px 0;" class="text-center">
+              <a>{{ product.price }} &#8381;</a>
+            </div>          
+            {% if request.user.is_authenticated %}
+              <p class='text-center'>
+                <a href='#' class='add_to_cart' data-slug='{{ product.slug }}'>
+                  <button class='btn btn-primary'>Добавить в корзину</button>
+                </a>
+              </p>
+            {% endif %} 
           </div>
-          <div style="margin: 10px 0 10px 0;" class="text-center">
-            <a>{{ product.price }} &#8381;</a>
-          </div>          
-          {% if request.user.is_authenticated %}
-            <p class='text-center'>
-              <a href='#' class='add_to_cart' data-slug='{{ product.slug }}'>
-                <button class='btn btn-primary'>Добавить в корзину</button>
-              </a>
-            </p>
-          {% endif %} 
         </div>
-      </div>
-    </div>
+      </div>      
+    {% endif %} 
   {%endfor%}
 </div>
 <script src="{% static 'js/jquery.min.js' %}"></script>

@@ -87,14 +87,18 @@ pre_save.connect(pre_save_category_slug, sender=Category)
 
 #******************************************************************************
 class SubCategory(models.Model):
-	name = models.CharField(max_length=100)
-	category = models.ForeignKey(Category, default = '', on_delete=models.CASCADE)
-	slug = models.SlugField(blank=True)	
-	image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
-	def get_absolute_url(self):
-		return reverse('subcategory_detail', kwargs={'subcategory_slug': self.slug})        
-	def __str__(self):
-		return self.name
+    name = models.CharField(max_length=100)
+    category = models.ForeignKey(Category, default = '', on_delete=models.CASCADE)
+    slug = models.SlugField(blank=True)	
+    image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
+
+    def get_available(self, subcategory):
+        objects_array = Product.objects.filter(subcategory=subcategory, available=True)
+        return True if objects_array else False        
+    def get_absolute_url(self):
+        return reverse('subcategory_detail', kwargs={'subcategory_slug': self.slug})        
+    def __str__(self):
+        return self.name
 
 def pre_save_subcategory_slug(sender, instance, *args, **kwargs):
     if not instance.slug:
@@ -243,7 +247,6 @@ ORDER_STATUS_CHOICES = (
 )
 
 class Order(models.Model):
-
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     items = models.ForeignKey(Cart, on_delete=models.CASCADE)
     total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)

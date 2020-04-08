@@ -96,6 +96,13 @@ def part_view(request, part_slug):
 	categories = Category.objects.all()
 	part = Part.objects.get(slug=part_slug)
 	categories_of_part = Category.objects.filter(part=part)
+	
+	for category in categories_of_part:
+		subcategories_of_category = SubCategory.objects.filter(category=category)
+		for subcategory in subcategories_of_category:
+			if Product.objects.filter(subcategory=subcategory, available=True):
+				break
+		
 	context = {
 		'parts': parts, 
 		'categories': categories, 
@@ -119,12 +126,26 @@ def category_view(request, category_slug):
 	parts = Part.objects.all()
 	categories = Category.objects.all()
 	category = Category.objects.get(slug=category_slug)
+
+	# для динамического отображения ПОДКАТЕГОРИЙ (get_available==True) на странице category.html
 	subcategories_of_category = SubCategory.objects.filter(category=category)
+	for subcategory in subcategories_of_category:
+		if subcategory.get_available(subcategory=subcategory):
+			continue
+		# удалить неподходящий
+
+	# для динамического отображения продуктов КАТЕГОРИИ (available==True) на странице category.html
+	products_of_category = []	
+	products = Product.objects.all()
+	for subcategory in subcategories_of_category:
+		products_of_category += Product.objects.filter(subcategory=subcategory, available=True)
+
 	context = {
         'parts': parts, 
 		'categories': categories, 
 		'category': category, 
 		'subcategories_of_category': subcategories_of_category,
+		'products_of_category': products_of_category,
 		'cart': cart
     }
 	return render(request, 'category.html', context)

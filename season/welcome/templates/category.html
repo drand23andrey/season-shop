@@ -9,7 +9,7 @@
 <div class="row">
     {%for subcategory in subcategories_of_category%}
       {% if subcategory.category == category %}
-        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6">
           <div class="card h-100">
             <a href="{{ subcategory.get_absolute_url }}"><img class="card-img-top" src="{{ subcategory.image.url }}" alt=""></a>
             <hr class="card-hr">
@@ -23,6 +23,31 @@
       {% endif %}
     {%endfor%}
 </div>
+{% if products_of_category %}
+  <hr>
+  <div class="row">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <h5>Все товары категории {{ category.name }}</h5>
+      </div>
+  </div>
+  <div class="row">
+    {%for product in products_of_category%}  
+      {% if product.available %}
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6">
+          <div class="card h-100">
+            <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}" alt=""></a>
+            <hr class="card-hr">
+            <div class="card-body">
+              <div class="card-title text-center">
+                <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    {%endfor%}
+  </div>    
+{% endif %}
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script>
   // асинхронный скриптинг для корзины

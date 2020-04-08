@@ -28,16 +28,19 @@ make_complete.short_description = " Пометить выбранные как '
 class OrderAdmin(admin.ModelAdmin):
     list_filter = ['status']
     actions = [make_accepted, make_wait_payed, make_payed_process, make_wait_get, make_complete]
-    list_display = (Order.order, "status", Order.order_price, Order.cart_items)
+    list_display = ('order', "status", Order.order_price, Order.cart_items)
 
 class CartAdmin(admin.ModelAdmin):
     list_display = (Cart.cart, Cart.cart_price, Cart.cart_items)    
+
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('title', 'available')    
 
 admin.site.register(Part)
 admin.site.register(Category)
 admin.site.register(SubCategory)
 admin.site.register(Brand)
-admin.site.register(Product)
+admin.site.register(Product, ProductAdmin)
 admin.site.register(CartItem)
 admin.site.register(Cart, CartAdmin)
 admin.site.register(Order, OrderAdmin)

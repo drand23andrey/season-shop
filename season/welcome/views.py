@@ -133,6 +133,7 @@ def category_view(request, category_slug):
 		if subcategory.get_available(subcategory=subcategory):
 			continue
 		# удалить неподходящий
+    
 
 	# для динамического отображения продуктов КАТЕГОРИИ (available==True) на странице category.html
 	products_of_category = []	

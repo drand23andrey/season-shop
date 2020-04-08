@@ -91,7 +91,7 @@ class SubCategory(models.Model):
     category = models.ForeignKey(Category, default = '', on_delete=models.CASCADE)
     slug = models.SlugField(blank=True)	
     image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
-
+    available = models.BooleanField(default=True)   
     def get_available(self, subcategory):
         objects_array = Product.objects.filter(subcategory=subcategory, available=True)
         return True if objects_array else False        

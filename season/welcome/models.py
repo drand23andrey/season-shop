@@ -45,13 +45,22 @@ pre_save.connect(pre_save_carousel_element_slug, sender=CarouselElement)
 #******************************************************************************
 
 class Part(models.Model):
-	name = models.CharField(max_length=100)
-	slug = models.SlugField(blank=True)	
-	image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
-	def get_absolute_url(self):
-		return reverse('part_detail', kwargs={'part_slug': self.slug})   
-	def __str__(self):
-		return self.name
+    name = models.CharField(max_length=100)
+    slug = models.SlugField(blank=True)	
+    image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
+    
+
+    def get_available(self):
+        categories_of_part = Category.objects.filter(part=self)
+        for category in categories_of_part:
+            if category.get_available():
+                return True
+        return False
+
+    def get_absolute_url(self):
+    	return reverse('part_detail', kwargs={'part_slug': self.slug})   
+    def __str__(self):
+    	return self.name
 
 def pre_save_part_slug(sender, instance, *args, **kwargs):
     if not instance.slug:
@@ -66,14 +75,22 @@ pre_save.connect(pre_save_part_slug, sender=Part)
 #******************************************************************************
 
 class Category(models.Model):
-	name = models.CharField(max_length=100)
-	part = models.ForeignKey(Part, on_delete=models.CASCADE)
-	slug = models.SlugField(blank=True)	
-	image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
-	def get_absolute_url(self):
-		return reverse('category_detail', kwargs={'category_slug': self.slug})        
-	def __str__(self):
-		return self.name
+    name = models.CharField(max_length=100)
+    part = models.ForeignKey(Part, on_delete=models.CASCADE)
+    slug = models.SlugField(blank=True)	
+    image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
+
+    def get_available(self):
+        subcategories_of_category = SubCategory.objects.filter(category=self)
+        for subcategory in subcategories_of_category:
+            if subcategory.get_available():
+                return True
+        return False   
+        
+    def get_absolute_url(self):
+        return reverse('category_detail', kwargs={'category_slug': self.slug})        
+    def __str__(self):
+        return self.name
 
 def pre_save_category_slug(sender, instance, *args, **kwargs):
     if not instance.slug:
@@ -91,10 +108,11 @@ class SubCategory(models.Model):
     category = models.ForeignKey(Category, default = '', on_delete=models.CASCADE)
     slug = models.SlugField(blank=True)	
     image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
-    available = models.BooleanField(default=True)   
-    def get_available(self, subcategory):
-        objects_array = Product.objects.filter(subcategory=subcategory, available=True)
-        return True if objects_array else False        
+
+    def get_available(self):
+        products_of_subcategory = Product.objects.filter(subcategory=self, available=True)
+        return True if products_of_subcategory else False   
+
     def get_absolute_url(self):
         return reverse('subcategory_detail', kwargs={'subcategory_slug': self.slug})        
     def __str__(self):

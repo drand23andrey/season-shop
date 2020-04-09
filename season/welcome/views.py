@@ -12,28 +12,31 @@ from django.contrib.auth.models import User
 
 # Create your views here.
 def base_view(request):
-    try:
-        cart_id = request.session['cart_id']
-        cart = Cart.objects.get(id=cart_id)
-        request.session['total'] = cart.items.count()
-    except:
-        cart = Cart()
-        cart.save()
-        cart_id = cart.id
-        request.session['cart_id'] = cart_id
-        cart = Cart.objects.get(id=cart_id)
-
-    categories = Category.objects.all()
-    parts = Part.objects.all()
-    carousel_elements = CarouselElement.objects.all()
-    
-    context = {
-        'categories': categories, 
-        'parts': parts, 
-        "cart": cart, 
+	try:
+	    cart_id = request.session['cart_id']
+	    cart = Cart.objects.get(id=cart_id)
+	    request.session['total'] = cart.items.count()
+	except:
+	    cart = Cart()
+	    cart.save()
+	    cart_id = cart.id
+	    request.session['cart_id'] = cart_id
+	    cart = Cart.objects.get(id=cart_id)	
+	categories = Category.objects.all()
+	parts_temp = Part.objects.all()
+	parts = []
+	for part in parts_temp:
+		if part.get_available():
+			parts += parts_temp.filter(name=part.name)	
+	carousel_elements = CarouselElement.objects.all()
+	
+	context = {
+	    'categories': categories, 
+	    'parts': parts, 
+	    "cart": cart, 
 		'carousel_elements': carousel_elements,
-    }
-    return render(request, 'base.html', context)
+	}
+	return render(request, 'base.html', context)
 
 
 def product_view(request, product_slug):
@@ -71,13 +74,22 @@ def catalog_view(request):
 		request.session['cart_id'] = cart_id
 		cart = Cart.objects.get(id=cart_id)
 
-	categories = Category.objects.all()
-	parts = Part.objects.all()
+	categories_temp = Category.objects.all()
+	categories = []
+	for category in categories_temp:
+		if category.get_available():
+			categories += categories_temp.filter(name=category.name)
+
+	parts_temp = Part.objects.all()
+	parts = []
+	for part in parts_temp:
+		if part.get_available():
+			parts += parts_temp.filter(name=part.name)	
 	
 	context = {
 		'categories': categories, 
 		'parts': parts, 
-		"cart": cart, 
+		'cart': cart, 
 	}
 	return render(request, 'catalog.html', context)
 
@@ -95,13 +107,12 @@ def part_view(request, part_slug):
 	parts = Part.objects.all()
 	categories = Category.objects.all()
 	part = Part.objects.get(slug=part_slug)
-	categories_of_part = Category.objects.filter(part=part)
-	
-	for category in categories_of_part:
-		subcategories_of_category = SubCategory.objects.filter(category=category)
-		for subcategory in subcategories_of_category:
-			if Product.objects.filter(subcategory=subcategory, available=True):
-				break
+
+	categories_of_part_temp = Category.objects.filter(part=part)	
+	categories_of_part = []
+	for category in categories_of_part_temp:
+		if category.get_available():
+			categories_of_part += categories_of_part_temp.filter(name=category.name)
 		
 	context = {
 		'parts': parts, 
@@ -127,17 +138,18 @@ def category_view(request, category_slug):
 	categories = Category.objects.all()
 	category = Category.objects.get(slug=category_slug)
 
-	# для динамического отображения ПОДКАТЕГОРИЙ (get_available==True) на странице category.html
-	subcategories_of_category = SubCategory.objects.filter(category=category)
-	for subcategory in subcategories_of_category:
-		if subcategory.get_available(subcategory=subcategory):
-			continue
-		# удалить неподходящий
-    
+	# для динамического отображения ПОДКАТЕГОРИЙ с get_available==True на странице category.html
+	# TODO
+	subcategories_of_category_temp = SubCategory.objects.filter(category=category)
+	subcategories_of_category = []
+	for subcategory in subcategories_of_category_temp:
+		if subcategory.get_available():
+			subcategories_of_category += subcategories_of_category_temp.filter(name=subcategory.name)
+			continue    
 
-	# для динамического отображения продуктов КАТЕГОРИИ (available==True) на странице category.html
+	# для динамического отображения ПРОДУКТОВ с признаком available==True на странице category.html
+	# TODO
 	products_of_category = []	
-	products = Product.objects.all()
 	for subcategory in subcategories_of_category:
 		products_of_category += Product.objects.filter(subcategory=subcategory, available=True)
 

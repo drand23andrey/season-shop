@@ -1,52 +1,89 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+
+
+{% if len_products_of_category > 30 %}
 <div class="row">
-    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-        <h5>{{ category.name }}</h5>
-    </div>
+  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <h5>{{ category.name }}</h5>
+  </div>
 </div>
-<div class="row">
-    {%for subcategory in subcategories_of_category%}
-      {% if subcategory.category == category %}
-        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6">
-          <div class="card h-100">
-            <a href="{{ subcategory.get_absolute_url }}"><img class="card-img-top" src="{{ subcategory.image.url }}" alt=""></a>
-            <hr class="card-hr">
-            <div class="card-body">
-              <div class="card-title text-center">
-                <a href="{{ subcategory.get_absolute_url }}">{{ subcategory.name }}</a>
+  <div class="row">
+      {%for subcategory in subcategories_of_category%}
+        {% if subcategory.category == category %}
+          <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6">
+            <div class="card h-100">
+              <a href="{{ subcategory.get_absolute_url }}"><img class="card-img-top" src="{{ subcategory.image.url }}" alt=""></a>
+              <hr class="card-hr">
+              <div class="card-body">
+                <div class="card-title text-center">
+                  <a href="{{ subcategory.get_absolute_url }}">{{ subcategory.name }}</a>
+                </div>
               </div>
             </div>
           </div>
+        {% endif %}
+      {%endfor%}
+  </div>
+  {% if products_of_category %}
+    <hr>
+    <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <h5>Все товары категории {{ category.name }}</h5>
         </div>
-      {% endif %}
-    {%endfor%}
-</div>
-{% if products_of_category %}
-  <hr>
+    </div>
+    <div class="row">
+      {%for product in products_of_category%}  
+        {% if product.available %}
+          <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6">
+            <div class="card h-100">
+              <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}" alt=""></a>
+              <hr class="card-hr">
+              <div class="card-body">
+                <div class="card-title text-center">
+                  <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {%endfor%}
+    </div>    
+  {% endif %}
+{% else %}
   <div class="row">
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-          <h5>Все товары категории {{ category.name }}</h5>
-      </div>
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <h5>Все товары категории {{ category.name }}</h5>
+    </div>
   </div>
   <div class="row">
-    {%for product in products_of_category%}  
-      {% if product.available %}
-        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6">
-          <div class="card h-100">
-            <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}" alt=""></a>
-            <hr class="card-hr">
-            <div class="card-body">
-              <div class="card-title text-center">
-                <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
-              </div>
-            </div>
+  {%for product in products_of_category%}  
+    {% if product.available %}
+      <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
+        <div class="card h-100">
+          <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}" alt=""></a>
+          <hr class="card-hr">
+          <div class="card-body">
+            <div class="card-title text-center">
+              <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+            </div>            
+            <div style="margin: 10px 0 10px 0;" class="text-center">
+              <a>{{ product.price }} &#8381;</a>
+            </div>          
+            {% if request.user.is_authenticated %}
+              <p class='text-center'>
+                <a href='#' class='add_to_cart' data-slug='{{ product.slug }}'>
+                  <button class='btn btn-primary'>Добавить в корзину</button>
+                </a>
+              </p>
+            {% endif %} 
           </div>
         </div>
-      {% endif %}
-    {%endfor%}
-  </div>    
+      </div>
+    {% endif %}
+  {%endfor%}
+  </div>   
 {% endif %}
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script>

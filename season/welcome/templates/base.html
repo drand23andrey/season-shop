@@ -81,6 +81,9 @@
                     Привет, {{ request.user }}!
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    {% if request.user.is_superuser %}
+                      <a href='{% url "admin:index" %}' class="dropdown-item">Сайт администратора</a> 
+                    {% endif %}
                     <a href='{% url "account" %}' class="dropdown-item">Личный кабинет</a>  
                     <a href='{% url "logout" %}' class="dropdown-item">Выйти</a>           
                 </div>
@@ -199,10 +202,10 @@
             <td valign="top" width="100%"><h5>Контакты:</h5></td>
           </tr>
           <tr>
-            <td valign="top" width="100%">+7 912 632 36 15</td>
+            <td valign="top" width="100%">+7(912)632-36-15</td>
           </tr>
           <tr>
-            <td valign="top" width="100%">+7 343 942 02 12</td>
+            <td valign="top" width="100%">+7(34394)2-02-12</td>
           </tr>
           <tr>
             <td valign="top" width="100%"><br></td>

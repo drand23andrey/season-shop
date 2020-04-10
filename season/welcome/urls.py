@@ -42,5 +42,5 @@ urlpatterns = [
 	url(r'^registration/$', registration_view, name='registration'),
 	url(r'^login/$', login_view, name='login'),
 	url(r'^logout/$', LogoutView.as_view(next_page=reverse_lazy('base')), name='logout'),
-	url(r'^$', base_view, name='base'),
+	url(r'^$', base_view, name='base')
 ]

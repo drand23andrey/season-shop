@@ -9,6 +9,7 @@ from welcome.forms import OrderForm, RegistrationForm, LoginForm
 from welcome.models import Category, SubCategory, Product, CartItem, Cart, Order, Part, CarouselElement
 from django.views.generic import View
 from django.contrib.auth.models import User
+from random import shuffle
 
 # Create your views here.
 def base_view(request):
@@ -26,7 +27,7 @@ def base_view(request):
 	parts_temp = Part.objects.all()
 	parts = []
 	for part in parts_temp:
-		if part.get_available():
+		if part.is_available():
 			parts += parts_temp.filter(name=part.name)	
 	carousel_elements = CarouselElement.objects.all()
 	
@@ -77,13 +78,13 @@ def catalog_view(request):
 	categories_temp = Category.objects.all()
 	categories = []
 	for category in categories_temp:
-		if category.get_available():
+		if category.is_available():
 			categories += categories_temp.filter(name=category.name)
 
 	parts_temp = Part.objects.all()
 	parts = []
 	for part in parts_temp:
-		if part.get_available():
+		if part.is_available():
 			parts += parts_temp.filter(name=part.name)	
 	
 	context = {
@@ -111,7 +112,7 @@ def part_view(request, part_slug):
 	categories_of_part_temp = Category.objects.filter(part=part)	
 	categories_of_part = []
 	for category in categories_of_part_temp:
-		if category.get_available():
+		if category.is_available():
 			categories_of_part += categories_of_part_temp.filter(name=category.name)
 		
 	context = {
@@ -138,20 +139,28 @@ def category_view(request, category_slug):
 	categories = Category.objects.all()
 	category = Category.objects.get(slug=category_slug)
 
-	# для динамического отображения ПОДКАТЕГОРИЙ с get_available==True на странице category.html
+	# для динамического отображения ПОДКАТЕГОРИЙ с is_available==True на странице category.html
 	# TODO
 	subcategories_of_category_temp = SubCategory.objects.filter(category=category)
 	subcategories_of_category = []
 	for subcategory in subcategories_of_category_temp:
-		if subcategory.get_available():
+		if subcategory.is_available():
 			subcategories_of_category += subcategories_of_category_temp.filter(name=subcategory.name)
 			continue    
 
 	# для динамического отображения ПРОДУКТОВ с признаком available==True на странице category.html
 	# TODO
-	products_of_category = []	
+	products_of_category = Product.objects.none()
 	for subcategory in subcategories_of_category:
-		products_of_category += Product.objects.filter(subcategory=subcategory, available=True)
+		products_of_category = products_of_category | Product.objects.filter(subcategory=subcategory, available=True)
+
+	len_products_of_category = len(products_of_category)
+	if len_products_of_category > 30:
+		products_of_category = list(products_of_category)
+		shuffle(products_of_category)
+		products_of_category = products_of_category[:30]
+	else:
+		products_of_category = products_of_category.order_by('title')
 
 	context = {
         'parts': parts, 
@@ -159,6 +168,7 @@ def category_view(request, category_slug):
 		'category': category, 
 		'subcategories_of_category': subcategories_of_category,
 		'products_of_category': products_of_category,
+		'len_products_of_category': len_products_of_category,
 		'cart': cart
     }
 	return render(request, 'category.html', context)
@@ -178,7 +188,7 @@ def subcategory_view(request, subcategory_slug):
     categories = Category.objects.all()
     subcategory = SubCategory.objects.get(slug=subcategory_slug)
     price_filter_type = request.GET.get('price_filter_type')
-    products_of_subcategory = Product.objects.filter(subcategory=subcategory)
+    products_of_subcategory = Product.objects.filter(subcategory=subcategory).order_by('title')
     context = {
         'parts': parts, 
         'categories': categories, 

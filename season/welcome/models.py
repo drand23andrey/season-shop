@@ -48,12 +48,11 @@ class Part(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(blank=True)	
     image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
-    
 
-    def get_available(self):
+    def is_available(self):
         categories_of_part = Category.objects.filter(part=self)
         for category in categories_of_part:
-            if category.get_available():
+            if category.is_available():
                 return True
         return False
 
@@ -80,10 +79,10 @@ class Category(models.Model):
     slug = models.SlugField(blank=True)	
     image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
 
-    def get_available(self):
+    def is_available(self):
         subcategories_of_category = SubCategory.objects.filter(category=self)
         for subcategory in subcategories_of_category:
-            if subcategory.get_available():
+            if subcategory.is_available():
                 return True
         return False   
         
@@ -109,7 +108,7 @@ class SubCategory(models.Model):
     slug = models.SlugField(blank=True)	
     image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
 
-    def get_available(self):
+    def is_available(self):
         products_of_subcategory = Product.objects.filter(subcategory=self, available=True)
         return True if products_of_subcategory else False   
 
@@ -147,24 +146,21 @@ pre_save.connect(pre_save_brand_slug, sender=Brand)
 
 #******************************************************************************
 
-class Product(models.Model):
+class Product(models.Model):    
+    subcategory = models.ForeignKey(SubCategory, default='', on_delete=models.CASCADE)
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
+    title = models.CharField(max_length=120)
+    price = models.DecimalField(max_digits=9, decimal_places=2)
+    available = models.BooleanField(default=True)
+    image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
+    description = models.TextField(blank=True)
+    slug = models.SlugField(blank=True)
 
-	subcategory = models.ForeignKey(SubCategory, default='', on_delete=models.CASCADE)
-	brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
-	title = models.CharField(max_length=120)
-	slug = models.SlugField(blank=True)
-	description = models.TextField(blank=True)
-	image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
-	price = models.DecimalField(max_digits=9, decimal_places=2)
-	available = models.BooleanField(default=True)
-    # objects = ProductManager()
-
-	def __str__(self):
-		return self.title
-
+    def __str__(self):
+    	return self.title  
     # для ссылок на обьекты
-	def get_absolute_url(self):
-		return reverse('product_detail', kwargs={'product_slug': self.slug})
+    def get_absolute_url(self):
+    	return reverse('product_detail', kwargs={'product_slug': self.slug})    
 
 def pre_save_product_slug(sender, instance, *args, **kwargs):
     if not instance.slug:

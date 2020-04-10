@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.contrib import admin
 from welcome.models import Category, SubCategory, Brand, Product, CartItem, Cart, Order, Part, CarouselElement
 
-
+# методы для заказов (Orders) ***************************************************************
 def make_accepted(modeladmin, request, queryset):
     queryset.update(status='Принят в обработку')
 make_accepted.short_description = " Пометить выбранные как 'Принят в обработку'"
@@ -24,6 +24,19 @@ make_wait_get.short_description = " Пометить выбранные как '
 def make_complete(modeladmin, request, queryset):
     queryset.update(status='Выполнен')
 make_complete.short_description = " Пометить выбранные как 'Выполнен'"
+# *******************************************************************************************
+
+# методы для товаров (Products) ***************************************************************
+def make_available(modeladmin, request, queryset):
+    queryset.update(available=True)
+make_accepted.short_description = " Пометить выбранные как 'Доступен'"
+
+def make_not_available(modeladmin, request, queryset):
+    queryset.update(available=False)
+make_accepted.short_description = " Пометить выбранные как 'Не доступен'"
+# *******************************************************************************************
+
+
 
 class OrderAdmin(admin.ModelAdmin):
     list_filter = ['status']
@@ -34,7 +47,9 @@ class CartAdmin(admin.ModelAdmin):
     list_display = (Cart.cart, Cart.cart_price, Cart.cart_items)    
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('title', 'available')    
+    list_display = ('title', 'price', 'brand', 'subcategory', 'available')   
+    list_filter = ['subcategory', 'available', 'brand'] 
+    actions = [make_available, make_not_available]
 
 admin.site.register(Part)
 admin.site.register(Category)

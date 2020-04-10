@@ -104,7 +104,7 @@ pre_save.connect(pre_save_category_slug, sender=Category)
 #******************************************************************************
 class SubCategory(models.Model):
     name = models.CharField(max_length=100)
-    category = models.ForeignKey(Category, default = '', on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     slug = models.SlugField(blank=True)	
     image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
 
@@ -147,7 +147,7 @@ pre_save.connect(pre_save_brand_slug, sender=Brand)
 #******************************************************************************
 
 class Product(models.Model):    
-    subcategory = models.ForeignKey(SubCategory, default='', on_delete=models.CASCADE)
+    subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     title = models.CharField(max_length=120)
     price = models.DecimalField(max_digits=9, decimal_places=2)

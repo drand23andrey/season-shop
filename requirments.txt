@@ -1,6 +1,0 @@
-python==3.8.2
-django==3.0.5
-django_crispy_forms==1.7.2
-transliterate==1.10.2
-django_notifications_hq=1.6.0
-pillow==7.1.1

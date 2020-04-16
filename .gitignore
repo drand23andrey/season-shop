@@ -94,7 +94,6 @@ ENV/
 
 # Database stuff
 *.sqlite3
-migrations/
 db.sqlite3
 
 # Atom config file

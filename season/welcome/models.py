@@ -25,8 +25,9 @@ def image_folder(instance, filename):
 #******************************************************************************
 
 class CarouselElement(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
+    name = models.CharField(max_length=30)
+    description = models.TextField(max_length=150)
+    # subscription = models.TextField(max_length=150)
     image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
     slug = models.SlugField(blank=True)	
     def __str__(self):

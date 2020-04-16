@@ -3,6 +3,12 @@
  * Copyright 2013-2019 Start Bootstrap
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-shop-homepage/blob/master/LICENSE)
  */
+ @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300&display=swap');
+
+h1, h2, h3, h4, h5, h6, p, a {
+  font-family: Manrope;
+}
+
 body {
   padding-top: 56px;
   background-color: 	#fafafa;
@@ -49,9 +55,13 @@ h1, h2, h3, h4, h5, h6{
   margin-bottom: 10px;
 }
 
+.form-control, .btn {
+  box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.125) !important;
+}
+
 .bg-dark {
   background-color: rgba(82, 95, 50, 0.945)!important;
-  box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.125);
 }
 
 .badge {
@@ -67,8 +77,8 @@ h1, h2, h3, h4, h5, h6{
   margin: 10px 0 0 0 !important;
 }
 
-.carousel-text {
-  /* text-shadow: 1px 1px 2px black, 0 0 1em red; */
+.carousel-indicator {
+  background-color: rgb(32, 32, 32) !important;
 }
 
 a {

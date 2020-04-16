@@ -111,9 +111,9 @@
           <ol class="carousel-indicators">
             {% for carousel_element in carousel_elements %}            
               {% if forloop.first %}
-                <li data-target="#carouselExampleIndicators" data-slide-to="{{forloop.counter0}}" class="active"></li>              
+                <li data-target="#carouselExampleIndicators" data-slide-to="{{forloop.counter0}}" class="active carousel-indicator"></li>              
               {% else %}
-                <li data-target="#carouselExampleIndicators" data-slide-to="{{forloop.counter0}}"></li> 
+                <li data-target="#carouselExampleIndicators" data-slide-to="{{forloop.counter0}}" class="carousel-indicator"></li> 
               {% endif %}
             {% endfor %}
           </ol>
@@ -122,16 +122,17 @@
             {% if forloop.first %}
             <div class="carousel-item active">
               <div class="jumbotron" style="min-height: 30rem;">
-                <h1 class="display-4 carousel-text">{{carousel_element.name}}</h1>
-                <p class="lead carousel-text">{{carousel_element.description}}</p>
+                <h1>{{carousel_element.name}}</h1>
+                <hr style="margin: 10px 0 10px 0 !important;">
+                <h5>{{carousel_element.description}}</h5>
                 {% if carousel_element.subscription or carousel_element.button %}
-                  <hr class="my-4" style="margin: 10px 0 10px 0 !important;">
+                  <hr style="margin: 10px 0 10px 0 !important;">
                 {% endif %}
                 {% if carousel_element.subscription%}
-                  <p class="carousel-text">{{carousel_element.subscription}}</p>
+                  <p>{{carousel_element.subscription}}</p>
                 {% endif %}
                 {% if carousel_element.button and carousel_element.link %}
-                  <p class="lead">
+                  <p>
                     <a style="margin-top: 10px;" class="btn btn-primary btn-lg" href="{{carousel_element.link}}" role="button">{{carousel_element.button}}</a>
                   </p>
                 {% endif %}
@@ -140,16 +141,17 @@
             {% else %}
             <div class="carousel-item">
               <div class="jumbotron" style="min-height: 30rem;">
-                <h1 class="display-4 carousel-text">{{carousel_element.name}}</h1>
-                <p class="lead carousel-text">{{carousel_element.description}}</p>
+                <h1>{{carousel_element.name}}</h1>
+                <hr style="margin: 10px 0 10px 0 !important;">
+                <h5>{{carousel_element.description}}</h5>
                 {% if carousel_element.subscription or carousel_element.button %}
-                  <hr class="my-4 carousel-text" style="margin: 10px 0 10px 0 !important;">
+                  <hr style="margin: 10px 0 10px 0 !important;">
                 {% endif %}
                 {% if carousel_element.subscription%}
-                  <p class="carousel-text">{{carousel_element.subscription}}</p>
+                  <p>{{carousel_element.subscription}}</p>
                 {% endif %}
                 {% if carousel_element.button %}
-                  <p class="lead">
+                  <p>
                     <a style="margin-top: 10px;" class="btn btn-primary btn-lg" href="{{carousel_element.link}}" role="button">{{carousel_element.button}}</a>
                   </p>
                 {% endif %}
@@ -190,13 +192,15 @@
 
     <hr>
 
-    <p><a name='about'>Оплата при получении. Пункт выдачи заказов расположен по адресу г.Красноуфимск, улица 8 Марта, 31Б</a></p>
+    <p><a name='about'></a></p>
     <div class="row">
       <div class="col-lg-6">
         <table width="100%" cellpadding="0">
           <tr>
-            <td valign="top" width="30%"><h5>Режим работы:</h5></td>
+            <td valign="top" width="70%"><h5>Режим работы магазина и пункта выдачи заказов:</h5></td>
           </tr>
+        </table>
+        <table width="100%" cellpadding="0">
           <tr>
             <td valign="top" width="30%">Понедельник</td><td valign="top" width="50%">09:00 – 18:30</td>
           </tr>
@@ -235,13 +239,19 @@
             <td valign="top" width="100%"><br></td>
           </tr>
           <tr>
-            <td valign="top" width="100%"><h5>Адрес:</h5></td>
+            <td valign="top" width="100%"><h5>Адрес магазина и пункта выдачи заказов:</h5></td>
           </tr>
           <tr>
             <td valign="top" width="100%">Россия, Свердловская область, </td>
           </tr>
           <tr>
             <td valign="top" width="100%">Красноуфимск, улица 8 Марта, 31Б</td>
+          </tr>
+          <tr>
+            <td valign="top" width="100%"><br></td>
+          </tr>
+          <tr>
+            <td valign="top" width="100%"><h5>Оплата заказов при получении</h5></td>
           </tr>
         </table>
       </div>

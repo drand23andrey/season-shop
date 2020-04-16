@@ -66,6 +66,11 @@ h1, h2, h3, h4, h5, h6{
 .carousel {
   margin: 10px 0 0 0 !important;
 }
+
+.carousel-text {
+  /* text-shadow: 1px 1px 2px black, 0 0 1em red; */
+}
+
 a {
   color: black;
   text-decoration: none;

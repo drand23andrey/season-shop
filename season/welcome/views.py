@@ -29,7 +29,7 @@ def base_view(request):
 	for part in parts_temp:
 		if part.is_available():
 			parts += parts_temp.filter(name=part.name)	
-	carousel_elements = CarouselElement.objects.all()
+	carousel_elements = CarouselElement.objects.filter(available=True)
 	
 	context = {
 	    'categories': categories, 

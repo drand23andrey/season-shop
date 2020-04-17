@@ -62,7 +62,7 @@
           </li> -->
           {% if request.get_full_path == '/' %}
           <li class="nav-item">
-            <a class="nav-link" href="#about">Контакты</a>
+            <a class="nav-link" href="#about">О нас</a>
           </li>
           {% endif %}
         </ul>
@@ -175,6 +175,11 @@
     <hr>
 
     <div class="row">
+      <div style="padding-bottom: 0;" class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6" >
+        <h5>Каталог</h5>
+      </div> 
+    </div>
+    <div class="row">
       {% for part in parts %}
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6" >
           <div class="card h-100">
@@ -227,6 +232,12 @@
       <div class="col-lg-6">
         <table width="100%" cellpadding="0">
           <tr>
+            <td valign="top" width="100%"><h5>Оплата заказов при получении</h5></td>
+          </tr>
+          <tr>
+            <td valign="top" width="100%"><br></td>
+          </tr>
+          <tr>
             <td valign="top" width="100%"><h5>Контакты:</h5></td>
           </tr>
           <tr>
@@ -246,12 +257,6 @@
           </tr>
           <tr>
             <td valign="top" width="100%">Красноуфимск, улица 8 Марта, 31Б</td>
-          </tr>
-          <tr>
-            <td valign="top" width="100%"><br></td>
-          </tr>
-          <tr>
-            <td valign="top" width="100%"><h5>Оплата заказов при получении</h5></td>
           </tr>
         </table>
       </div>

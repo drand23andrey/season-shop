@@ -89,5 +89,6 @@ class OrderForm(forms.Form):
 		self.fields['address'].label = 'Адрес доставки'
 		self.fields['address'].help_text = 'Обязательно указывайте город!'
 		self.fields['comments'].label = 'Комментарии к заказу'
+		self.fields['comments'].help_text = 'В комментариях к заказу можно дополнить заказ товаром, не представленным на сайте, либо оставить сообщение менеджеру заказа'
 		self.fields['date'].label = 'Дата получения заказа'
 		# self.fields['date'].help_text = 'Доставка производится на следущий день после оформления заказа. Менеджер с Вами предварительно свяжется!'

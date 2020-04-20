@@ -24,7 +24,7 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
-      <img class="logo navbar-brand" src="/media/logo1.png" alt='Магазин "Сезон"' href="{% url 'base' %}">
+      <img class="logo navbar-brand" src="/media/logo3.png" alt='Магазин "Сезон"' href="{% url 'base' %}">
       <!-- <a class="navbar-brand" href="{% url 'base' %}">Магазин "Сезон"</a> -->
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -122,15 +122,19 @@
             {% for carousel_element in carousel_elements %}
             {% if forloop.first %}
             <div class="carousel-item active">
+              {% if carousel_element.image %}
+              <div class="jumbotron" style="min-height: 30rem; background-image: linear-gradient(to left, rgba(81, 81, 81, 0.14), rgba(255, 255, 255, 0.72)), url({{carousel_element.image.url}});">
+              {% else %}
               <div class="jumbotron" style="min-height: 30rem;">
-                <h1>{{carousel_element.name}}</h1>
+              {% endif %}
+                <h1 class="jumbotron-text">{{carousel_element.name}}</h1>
                 <hr style="margin: 10px 0 10px 0 !important;">
-                <h5>{{carousel_element.description}}</h5>
+                <h5 class="jumbotron-text">{{carousel_element.description}}</h5>
                 {% if carousel_element.subscription or carousel_element.button %}
                   <hr style="margin: 10px 0 10px 0 !important;">
                 {% endif %}
                 {% if carousel_element.subscription%}
-                  <p>{{carousel_element.subscription}}</p>
+                  <p class="jumbotron-text">{{carousel_element.subscription}}</p>
                 {% endif %}
                 {% if carousel_element.button and carousel_element.link %}
                   <p>
@@ -141,15 +145,19 @@
             </div>
             {% else %}
             <div class="carousel-item">
+              {% if carousel_element.image %}
+              <div class="jumbotron" style="min-height: 30rem; background-image: linear-gradient(to left, rgba(81, 81, 81, 0.14), rgba(255, 255, 255, 0.72)), url({{carousel_element.image.url}});">
+              {% else %}
               <div class="jumbotron" style="min-height: 30rem;">
-                <h1>{{carousel_element.name}}</h1>
+              {% endif %}
+                <h1 class="jumbotron-text">{{carousel_element.name}}</h1>
                 <hr style="margin: 10px 0 10px 0 !important;">
-                <h5>{{carousel_element.description}}</h5>
+                <h5 class="jumbotron-text">{{carousel_element.description}}</h5>
                 {% if carousel_element.subscription or carousel_element.button %}
                   <hr style="margin: 10px 0 10px 0 !important;">
                 {% endif %}
                 {% if carousel_element.subscription%}
-                  <p>{{carousel_element.subscription}}</p>
+                  <p class="jumbotron-text">{{carousel_element.subscription}}</p>
                 {% endif %}
                 {% if carousel_element.button %}
                   <p>

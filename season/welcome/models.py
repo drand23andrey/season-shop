@@ -31,10 +31,10 @@ class CarouselElement(models.Model):
     available = models.BooleanField(default=True)
     button = models.CharField(max_length=30, blank=True)
     link = models.CharField(max_length=300, blank=True)
-    image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
+    image = models.ImageField(upload_to=image_folder, blank=True)
     slug = models.SlugField(blank=True)	
     def __str__(self):
-        return self.name
+        return self.name      
 
 def pre_save_carousel_element_slug(sender, instance, *args, **kwargs):
     if not instance.slug:

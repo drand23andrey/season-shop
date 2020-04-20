@@ -36,7 +36,15 @@ def make_not_available(modeladmin, request, queryset):
 make_accepted.short_description = " Пометить выбранные как 'Не доступен'"
 # *******************************************************************************************
 
+# методы для карусели (CarouselElements) ***************************************************************
+def make_available(modeladmin, request, queryset):
+    queryset.update(available=True)
+make_accepted.short_description = " Пометить выбранные как 'Доступен'"
 
+def make_not_available(modeladmin, request, queryset):
+    queryset.update(available=False)
+make_accepted.short_description = " Пометить выбранные как 'Не доступен'"
+# *******************************************************************************************
 
 class OrderAdmin(admin.ModelAdmin):
     list_filter = ['status']
@@ -51,6 +59,11 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ['subcategory', 'available', 'brand'] 
     actions = [make_available, make_not_available]
 
+class CarouselElementAdmin(admin.ModelAdmin):
+    list_display = ('name', 'available')   
+    list_filter = ['name', 'available'] 
+    actions = [make_available, make_not_available]
+
 admin.site.register(Part)
 admin.site.register(Category)
 admin.site.register(SubCategory)
@@ -59,4 +72,4 @@ admin.site.register(Product, ProductAdmin)
 admin.site.register(CartItem)
 admin.site.register(Cart, CartAdmin)
 admin.site.register(Order, OrderAdmin)
-admin.site.register(CarouselElement)
+admin.site.register(CarouselElement, CarouselElementAdmin)

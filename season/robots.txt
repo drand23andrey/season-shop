@@ -13,3 +13,4 @@ Disallow: /subcategory
 Disallow: /subcategory/
 Disallow: /admin
 Disallow: /admin/
+sitemap: https://sezon66.ru/sitemap.xml

@@ -3,44 +3,24 @@
 {% load crispy_forms_tags %}
 {% block content %}
 <h5 style="margin: 10px 0 10px 0;" class="text-center">Оформление заказа</h5>
-<hr>
+<hr style="margin: 10px 0 10px 0;">
 <form action='{% url "make_order" %}' method="POST">
 {% csrf_token %}
-<div class="row">
-	<div class='col-sm-4'>
-		{{ form.name|as_crispy_field }}
-	</div>
-	<div class='col-sm-4'>
-		{{ form.last_name|as_crispy_field }}
-	</div>
-	<div class='col-sm-4'>
+<div class="row" style="margin: -10px !important;">
+	<div class='col-sm-6' style="margin: 0;">
 		{{ form.phone|as_crispy_field }}
 	</div>
+	<div class='col-sm-6' style="margin: 0;">
+		{{ form.name|as_crispy_field }}
+	</div>
 </div>
-{{ form.buying_type|as_crispy_field }}
-{{ form.address|as_crispy_field }}
-{{ form.date|as_crispy_field }}
 {{ form.comments|as_crispy_field }}
-<input type='submit' class='btn btn-success' value='Оформить заказ' style="width: 100%; margin-bottom: 10px;">
+<input type='submit' class='btn btn-dark btn-block' value='Оформить заказ' style="width: 100%; margin-bottom: 10px;">
 </form>
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script>
 	$(document).ready(function(){
-		$('#div_id_address').css('display', 'none')
-		$('#id_buying_type').on('click', function(){
-			buying_type = $(this).val()
-			if(buying_type == 'delivery'){
-				$('#div_id_address').css('display', 'block')
-			}else{
-				$('#div_id_address').css('display', 'none')
-			}
-		})
-		$('#id_date_month').css('width', '150px')
-		$('#id_date_month').css('display', 'inline')
-		$('#id_date_year').css('width', '150px')
-		$('#id_date_year').css('display', 'inline')
-		$('#id_date_day').css('width', '150px')
-		$('#id_date_day').css('display', 'inline')
+		$("#id_name").attr("value", "{{first_name}}")
 	})
 
 </script>

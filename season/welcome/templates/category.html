@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-
+<div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-delay='2000'>
+  <div class="toast-body">
+    <a style="color: white;">Добавлено в корзину</a> 
+  </div>
+</div>
 
 {% if len_products_of_category > 30 %}
 <div class="row">
@@ -74,7 +78,7 @@
             {% if request.user.is_authenticated %}
               <p class='text-center'>
                 <a href='#' class='add_to_cart' data-slug='{{ product.slug }}'>
-                  <button class='btn btn-primary'>Добавить в корзину</button>
+                  <button class='btn btn-dark btn-block'>Добавить в корзину</button>
                 </a>
               </p>
             {% endif %} 
@@ -91,6 +95,7 @@
   $(document).ready(function(){
     $('.add_to_cart').on('click', function(e){
       e.preventDefault()
+      $('.toast').toast('show')
       product_slug = $(this).attr('data-slug')
       // console.log(product_slug)
       data = {

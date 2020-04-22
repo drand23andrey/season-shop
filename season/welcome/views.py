@@ -319,10 +319,12 @@ def order_create_view(request):
 		cart_id = cart.id
 		request.session['cart_id'] = cart_id
 		cart = Cart.objects.get(id=cart_id)
+	first_name = request.user.first_name
 	form = OrderForm(request.POST or None)
 	categories = Category.objects.all()
 	parts = Part.objects.all()
 	context = {
+		'first_name': first_name,
 		'form': form,
 		'cart': cart,
         'categories': categories, 
@@ -351,20 +353,14 @@ def make_order_view(request):
 	}
 	if form.is_valid():
 		name = form.cleaned_data['name']
-		last_name = form.cleaned_data['last_name']
 		phone = form.cleaned_data['phone']
-		buying_type = form.cleaned_data['buying_type']
-		address = form.cleaned_data['address']
 		comments = form.cleaned_data['comments']
 		new_order = Order.objects.create(
 			user=request.user,
 			items=cart,
 			total=cart.cart_total,
 			first_name=name,
-			last_name=last_name,
 			phone=phone,
-			address=address,
-			buying_type=buying_type,
 			comments=comments, 
 		)
 		del request.session['cart_id']

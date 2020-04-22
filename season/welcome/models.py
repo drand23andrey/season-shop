@@ -269,12 +269,7 @@ class Order(models.Model):
     items = models.ForeignKey(Cart, on_delete=models.CASCADE)
     total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
     first_name = models.CharField(max_length=200)
-    last_name = models.CharField(max_length=200)
     phone = models.CharField(max_length=20)
-    buying_type = models.CharField(max_length=40, choices=(('Самовывоз', 'Самовывоз'), 
-        ('Доставка', 'Доставка')), default='Самовывоз')
-    address = models.CharField(max_length=255, blank=True)
-    date = models.DateTimeField(auto_now_add=True)
     comments = models.TextField(blank=True)
     status = models.CharField(max_length=100, choices=ORDER_STATUS_CHOICES, default=ORDER_STATUS_CHOICES[0][0])
 

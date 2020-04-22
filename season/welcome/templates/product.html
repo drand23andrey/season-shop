@@ -2,20 +2,25 @@
 {% load static %}
 
 {% block content %}
+<div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-delay='2000'>
+  <div class="toast-body">
+    <a style="color: white;">Добавлено в корзину</a> 
+  </div>
+</div>
 
 <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
-  <div class="col-sm-4">
+  <div class="col-lg-8">
     <div class="card">      
       <img class="card-img-top" src="{{ product.image.url }}" style="width: 100%;">
     </div>
   </div>
-  <div class="col-sm-8">
-    <h5>{{ product.title }}</h5>
-    <p>{{ product.description }}</p>
+  <div class="col-lg-4">
+    <h5 class="text-center">{{ product.title }}</h5>
+    <p class="text-center">{{ product.description }}</p>
     <hr style="margin-left: 0; margin-right: 0;">
-    <p>{{ product.price }} &#8381;</p>
+    <p class="text-center">{{ product.price }} &#8381;</p>
     {% if request.user.is_authenticated %}
-      <a href="#" class="add_to_cart" data-slug="{{ product.slug }}"><button class="btn btn-primary" style="margin-top: 20px;">Добавить в корзину</button></a>
+      <a href="#" class="add_to_cart" data-slug="{{ product.slug }}"><button class="btn btn-dark btn-block" style="margin-top: 20px;">Добавить в корзину</button></a>
     {% else %}
       <small class='text-center'><a class="link" href='{% url "login" %}'>Войдите</a> или <a class="link" href='{% url "registration" %}'>зарегистрируйтесь</a> чтобы добавить товар в корзину</p></small>
     {% endif %}           
@@ -23,11 +28,12 @@
 </div>
 
 <script src="{% static 'js/jquery.min.js' %}"></script>
-<script>
+<script>  
   // асинхронный скриптинг для корзины
-  $(document).ready(function(){
-    $('.add_to_cart').on('click', function(e){
+    $(document).ready(function(){
+      $('.add_to_cart').on('click', function(e){
       e.preventDefault()
+      $('.toast').toast('show')
       product_slug = $(this).attr('data-slug')
       // console.log(product_slug)
       data = {

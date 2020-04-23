@@ -5,33 +5,38 @@
 {% if cart.items.count > 0 %}
 <h5 style="margin: 10px 0 10px 0;" class="text-center">Ваша корзина</h5>
 <div class="my-cart">
-  <table class="table">
+  <table class="table" style="width: fit-content; margin: auto;">
     <tr>
       <td class="text-center"><strong>Товар</strong></td>
       <td class="text-center"><strong>Цена</strong></td>
       <td class="text-center"><strong>Кол-во</strong></td>
-      <td class="text-center"></td>
-      <td class="text-center"></td>
     </tr>
     {% for item in cart.items.all %}
     <tr class="cart-item-{{ item.product.id }}">
       <td class="text-center">{{ item.product.title }}</td>
       <td class="text-center">{{ item.product.price }} &#8381;</td>
-      <td class="text-center">
-          <form action="" method="GET">
-            <input type="number" name="qty" class="cart-item-qty" data-id="{{ item.id }}" value="{{ item.qty }}" min="1" style="width: 50px;">
-          </form>
+      <td class="text-center" style="padding-top: 5px; padding-bottom: 5px;">
+        <div class="input-group flex-nowrap">
+          <div class="input-group-prepend">
+            <button class="minus btn btn-outline-secondary btn-dark" type="button" data-slug="{{ item.product.slug }}" data-id="{{ item.id }}" data-product-id="{{ item.product.id }}">-</button>
+          </div>
+          <input style="width: 33px;" type="text" name="qty" disabled='true' class="form-control text-center cart-item-qty" id='cart-item-qty-{{ item.id }}' data-id="{{ item.id }}" value="{{ item.qty }}">
+          <div class="input-group-append">
+            <button class="plus btn btn-outline-secondary btn-dark" type="button" data-slug="{{ item.product.slug }}" data-id="{{ item.id }}">+</button>
+          </div>
+        </div>
       </td>
-      <td class="text-center" id="cart-item-total-{{ item.id }}">{{ item.item_total }} &#8381;</td>
-      <td class="text-center"><a href="#" class="remove_from_cart" data-slug="{{ item.product.slug }}" data-id="{{ item.product.id }}"><button class="btn btn-dark">Удалить из корзины</button></a></td>
+    </tr>
+    <tr class="cart-item-{{ item.product.id }}">
+      <td style="border: 0px none black;"></td>
+      <td style="border: 0px none black;" class="text-right"><strong>Подытог:</strong></td>
+      <td style="border: 0px none black;" class="text-left" id="cart-item-total-{{ item.id }}"><strong>{{ item.item_total }} &#8381;</strong></td>
     </tr>
     {% endfor %}
     <tr>
       <td></td>
-      <td></td>
-      <td class="text-center"><strong>Итого: </strong></td>
-      <td class="text-center" id="cart-total-price"><strong>{{cart.cart_total}} &#8381;</strong></td>
-      <td></td>
+      <td class="text-right"><strong>Итого: </strong></td>
+      <td class="text-left" id="cart-total-price"><strong>{{cart.cart_total}} &#8381;</strong></td>
     </tr>
   </table>
   <a href="{% url 'checkout' %}" class="pull-right"><button class="btn btn-dark btn-block" style="width: 100%; margin-bottom: 10px;">Предварительный заказ</button></a>
@@ -42,51 +47,75 @@
 {% endif %}
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script>
-    // асинхронный скриптинг для корзины
-    $(document).ready(function(){
-      $('.cart-empty').css('display', 'none')
-      $('.remove_from_cart').on('click', function(e){
+  $(document).ready(function(){
+    $('.minus').on('click', function(e) {
       e.preventDefault()
       product_slug = $(this).attr('data-slug')
-      item_product_id = $(this).attr('data-id')
-      // console.log(item_product_id)
-      data = {
-        product_slug: product_slug  
-      }
-      $.ajax({
-        type: 'GET',
-        url: '{% url "remove_from_cart" %}',
-        data: data, 
-        success: function(data){
-          // console.log(data)
-          $('#cart_count').html(data.cart_total)
-          $('.cart-item-' + item_product_id).css('display', 'none')
-          $('#cart-total-price').html('<strong>' + parseFloat(data.cart_total_price).toFixed(2) + ' &#8381;' + '</strong>')
-          if(parseInt(data.cart_total) == 0){
-            $('.my-cart').css('display', 'none')
-            $('.cart-empty').css('display', 'block')
-          }
-        }
-      })
-    })
-  })  
-  $(document).ready(function(){
-    $('.cart-item-qty').on('click', function() {
-      qty = $(this).val()
       item_id = $(this).attr('data-id')
-      data = {
-        qty: qty, 
-        item_id: item_id,
+      item_product_id = $(this).attr('data-product-id')
+      qty = $('#cart-item-qty-' + item_id).val()
+      if(qty > 1) {
+        $('#cart-item-qty-' + item_id).val(qty-1)
+        qty = $('#cart-item-qty-' + item_id).val()
+        data = {
+          qty: qty, 
+          item_id: item_id,
+        }
+        $.ajax({
+          type: "GET",
+          url: '{% url "change_item_qty" %}',
+          data: data, 
+          success: function(data) {
+            $('#cart-item-total-' + item_id).html(parseFloat(data.item_total).toFixed(2) + ' &#8381;')
+            $('#cart-total-price').html('<strong>' + parseFloat(data.cart_total_price).toFixed(2) + ' &#8381;' + '</strong>')
+          } 
+        })
+      } else {
+        data = {
+          product_slug: product_slug  
+        }
+        $.ajax({
+          type: 'GET',
+          url: '{% url "remove_from_cart" %}',
+          data: data, 
+          success: function(data){
+            // console.log(data)
+            $('#cart_count').html(data.cart_total)
+            $('.cart-item-' + item_product_id).css('display', 'none')
+            $('#cart-total-price').html('<strong>' + parseFloat(data.cart_total_price).toFixed(2) + ' &#8381;' + '</strong>')
+            if(parseInt(data.cart_total) == 0){
+              $('.my-cart').css('display', 'none')
+              $('.cart-empty').css('display', 'block')
+            }
+          }
+        })
       }
-      $.ajax({
-        type: "GET",
-        url: '{% url "change_item_qty" %}',
-        data: data, 
-        success: function(data) {
-          $('#cart-item-total-' + item_id).html(parseFloat(data.item_total).toFixed(2) + ' &#8381;')
-          $('#cart-total-price').html('<strong>' + parseFloat(data.cart_total_price).toFixed(2) + ' &#8381;' + '</strong>')
-        } 
-      })
+
+    })
+  })
+  $(document).ready(function(){
+    $('.plus').on('click', function(e) {
+      e.preventDefault()
+      product_slug = $(this).attr('data-slug')
+      item_id = $(this).attr('data-id')
+      qty = $('#cart-item-qty-' + item_id).val()
+      if(qty < 99) {
+        $('#cart-item-qty-' + item_id).val(Number(qty)+1)
+        qty = $('#cart-item-qty-' + item_id).val()
+        data = {
+          qty: qty, 
+          item_id: item_id,
+        }
+        $.ajax({
+          type: "GET",
+          url: '{% url "change_item_qty" %}',
+          data: data, 
+          success: function(data) {
+            $('#cart-item-total-' + item_id).html(parseFloat(data.item_total).toFixed(2) + ' &#8381;')
+            $('#cart-total-price').html('<strong>' + parseFloat(data.cart_total_price).toFixed(2) + ' &#8381;' + '</strong>')
+          } 
+        })
+      }
     })
   })
 </script>

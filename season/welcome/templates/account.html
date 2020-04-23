@@ -10,6 +10,8 @@
 </div>
 <hr style="margin: 10px 0 10px 0;">
 <h5 style="margin: 10px 0 10px 0;" class="text-center">Ваши заказы</h5>
+
+{% if order %}   
 <table class='table' style="width: fit-content; margin: auto;">
 <tr>
 	<td class='text-center'><strong>№</strong></td>
@@ -26,6 +28,7 @@
 </tr>
 {% endfor %}
 </table>
+{% endif %}
 
 {% for item in order %}
 <div class="modal fade" id="myModal-{{ item.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -41,20 +44,22 @@
 			<td class="text-center"><strong>Товар</strong></td>
 			<td class="text-center"><strong>Цена</strong></td>
 			<td class="text-center"><strong>Кол-во</strong></td>
-			<td class="text-center"></td>
 			{% for order_item in item.items.items.all %}
-					<tr>
-						<td class="text-center" style="width: 40%;">{{ order_item.product.title }}</td>
-						<td class="text-center">{{ order_item.product.price }} &#8381;</td>
-						<td class="text-center">{{ order_item.qty }}</td>
-						<td class="text-center">{{ order_item.item_total }} &#8381;</td>
-					</tr>
-					{% endfor %}
+			<tr>
+				<td class="text-center" style="width: 40%;">{{ order_item.product.title }}</td>
+				<td class="text-center">{{ order_item.product.price }} &#8381;</td>
+				<td class="text-center">{{ order_item.qty }}</td>
+			</tr>
+			<tr>
+				<td style="border: 0px none black;"></td>
+				<td style="border: 0px none black;" class="text-right"><strong>Подытог:</strong></td>
+				<td style="border: 0px none black;" class="text-left"><strong>{{ order_item.item_total }} &#8381;</strong></td>
+			</tr>
+			{% endfor %}
         	<tr>
 	        	<td></td>
-	        	<td></td>
-	        	<td class="text-center"><strong>Итого:</strong></td>
-	        	<td class="text-center"><strong>{{ item.items.cart_total }} &#8381;</strong></td>
+	        	<td class="text-right"><strong>Итого:</strong></td>
+	        	<td class="text-left"><strong>{{ item.items.cart_total }} &#8381;</strong></td>
 	        </tr>
 		</table>
 		<hr style="margin: 10px -16px 10px -16px;">

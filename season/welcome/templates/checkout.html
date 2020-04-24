@@ -4,31 +4,27 @@
 {% block content %}
 
 <h5 style="margin: 10px 0 10px 0;" class="text-center">Ваш заказ</h5>
-    <table class="table" style="width: fit-content; margin: auto;">
-      <tr>
-        <td class="text-center"><strong>Товар</strong></td>
-        <td class="text-center"><strong>Цена</strong></td>
-        <td class="text-center"><strong>Кол-во</strong></td>
-      </tr>
+    <table class="table" style="margin: auto;">
       {% for item in cart.items.all %}
       <tr>
-        <td class="text-center">{{ item.product.title }}</td>
-        <td class="text-center">{{ item.product.price }} &#8381;</td>
-        <td class="text-center">{{ item.qty }}</td>
+        <td style="border-bottom: 1px solid #dee2e6;">
+          <a href="{{ item.product.get_absolute_url }}"><p class="text-left">{{ item.product.title }}</p></a>
+          <p class="text-left small gray-text" style="margin-top: auto;">{{ item.product.subcategory }}</p>
+          <p class="text-left small gray-text">{{ item.product.price }} &#8381; за шт.</p>
+        </td>
+        <td style="border-bottom: 1px solid #dee2e6;">
+          <p class="text-right" >{{ item.item_total }} &#8381;</p>
+          <p class="text-right small gray-text">{{ item.qty }} шт.</p>
+        </td>
       </tr>
-      <tr>
-        <td style="border: 0px none black;"></td>
-        <td style="border: 0px none black;" class="text-right"><strong>Подытог:</strong></td>        
-        <td style="border: 0px none black;" class="text-left"><strong>{{ item.item_total }} &#8381;</strong></td>
-      </tr>
-      {% endfor %}
-      <tr>
-        <td class="text-center"></td>
-        <td class="text-right"><strong>Итого: </strong></td>
-        <td class="text-left"><strong>{{cart.cart_total}} &#8381;</strong></td>
-        <td></td>
-      </tr>
+      {% endfor %}      
     </table>
-    <a href="{% url 'create_order' %}" class="pull-right"><button class="btn btn-dark btn-block" style="width: 100%; margin-bottom: 10px;">Оформить заказ</button></a>
+
+    <div class="row">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <h5 style="margin-bottom: 10px;" class="text-center" id="cart-total-price">Итого: {{cart.cart_total}} &#8381;</h5>
+        <a href="{% url 'create_order' %}" class="pull-right"><button class="btn btn-dark btn-block" style="width: 100%; margin-bottom: 10px;">Оформить заказ</button></a>
+      </div>
+    </div>
 
 {% endblock content %}

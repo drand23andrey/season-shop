@@ -12,7 +12,7 @@
 <h5 style="margin: 10px 0 10px 0;" class="text-center">Ваши заказы</h5>
 
 {% if order %}   
-<table class='table' style="width: fit-content; margin: auto;">
+<table class='table' style="margin: auto; width: fit-content;">
 <tr>
 	<td class='text-center'><strong>№</strong></td>
 	<td class='text-center'><strong>Статус</strong></td>
@@ -40,28 +40,26 @@
       </div>
 	  <hr style="margin: 0;">
       <div class="modal-body">
-        <table class='table' style="width: fit-content; margin: auto;">			
-			<td class="text-center"><strong>Товар</strong></td>
-			<td class="text-center"><strong>Цена</strong></td>
-			<td class="text-center"><strong>Кол-во</strong></td>
+		<table class="table" style="margin: auto;">
 			{% for order_item in item.items.items.all %}
 			<tr>
-				<td class="text-center" style="width: 40%;">{{ order_item.product.title }}</td>
-				<td class="text-center">{{ order_item.product.price }} &#8381;</td>
-				<td class="text-center">{{ order_item.qty }}</td>
+			  <td style="border-bottom: 1px solid #dee2e6;">
+				<a href="{{ item.product.get_absolute_url }}"><p class="text-left">{{ order_item.product.title }}</p></a>
+				<p class="text-left small gray-text" style="margin-top: auto;">{{ order_item.product.subcategory }}</p>
+				<p class="text-left small gray-text">{{ order_item.product.price }} &#8381; за шт.</p>
+			  </td>
+			  <td style="border-bottom: 1px solid #dee2e6;">
+				<p class="text-right" >{{ order_item.item_total }} &#8381;</p>
+				<p class="text-right small gray-text">{{ order_item.qty }} шт.</p>
+			  </td>
 			</tr>
-			<tr>
-				<td style="border: 0px none black;"></td>
-				<td style="border: 0px none black;" class="text-right"><strong>Подытог:</strong></td>
-				<td style="border: 0px none black;" class="text-left"><strong>{{ order_item.item_total }} &#8381;</strong></td>
-			</tr>
-			{% endfor %}
-        	<tr>
-	        	<td></td>
-	        	<td class="text-right"><strong>Итого:</strong></td>
-	        	<td class="text-left"><strong>{{ item.items.cart_total }} &#8381;</strong></td>
-	        </tr>
-		</table>
+			{% endfor %}      
+		  </table>
+		  <div class="row">
+			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			  <h5 style="margin-bottom: 10px;" class="text-center">Итого: {{item.items.cart_total}} &#8381;</h5>
+			</div>
+		  </div>
 		<hr style="margin: 10px -16px 10px -16px;">
    		<h5>Заказчик</h5>
    		<p>Телефон: {{ item.phone }}</p>

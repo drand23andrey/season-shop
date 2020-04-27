@@ -13,31 +13,33 @@ from random import shuffle
 
 # Create your views here.
 def base_view(request):
-	try:
-	    cart_id = request.session['cart_id']
-	    cart = Cart.objects.get(id=cart_id)
-	    request.session['total'] = cart.items.count()
-	except:
-	    cart = Cart()
-	    cart.save()
-	    cart_id = cart.id
-	    request.session['cart_id'] = cart_id
-	    cart = Cart.objects.get(id=cart_id)	
-	categories = Category.objects.all()
-	parts_temp = Part.objects.all()
-	parts = []
-	for part in parts_temp:
-		if part.is_available():
-			parts += parts_temp.filter(name=part.name)	
-	carousel_elements = CarouselElement.objects.filter(available=True)
-	
-	context = {
-	    'categories': categories, 
-	    'parts': parts, 
-	    "cart": cart, 
-		'carousel_elements': carousel_elements,
-	}
-	return render(request, 'base.html', context)
+    try:
+        cart_id = request.session['cart_id']
+        cart = Cart.objects.get(id=cart_id)
+        request.session['total'] = cart.items.count()
+    except:
+        cart = Cart()
+        cart.save()
+        cart_id = cart.id
+        request.session['cart_id'] = cart_id
+        cart = Cart.objects.get(id=cart_id)	
+    user_groups = list(request.user.groups.values_list('name', flat=True))
+    categories = Category.objects.all()
+    parts_temp = Part.objects.all()
+    parts = []
+    for part in parts_temp:
+    	if part.is_available():
+    		parts += parts_temp.filter(name=part.name)	
+    carousel_elements = CarouselElement.objects.filter(available=True)
+
+    context = {
+        'user_groups': user_groups,
+        'categories': categories, 
+        'parts': parts, 
+        "cart": cart, 
+    	'carousel_elements': carousel_elements,
+    }
+    return render(request, 'base.html', context)
 
 
 def product_view(request, product_slug):

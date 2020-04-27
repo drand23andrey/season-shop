@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.contrib import admin
 from welcome.models import Category, SubCategory, Brand, Product, CartItem, Cart, Order, Part, CarouselElement
+from django.contrib.auth.models import User
 
 # методы для заказов (Orders) ***************************************************************
 def make_accepted(modeladmin, request, queryset):
@@ -64,6 +65,9 @@ class CarouselElementAdmin(admin.ModelAdmin):
     list_filter = ['name', 'available'] 
     actions = [make_available, make_not_available]
 
+# class UserAdmin(admin.ModelAdmin):
+#     list_display = (User.name)   
+
 admin.site.register(Part)
 admin.site.register(Category)
 admin.site.register(SubCategory)
@@ -73,3 +77,4 @@ admin.site.register(CartItem)
 admin.site.register(Cart, CartAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(CarouselElement, CarouselElementAdmin)
+# admin.site.register(UserAdmin) добавить признак is_superuser

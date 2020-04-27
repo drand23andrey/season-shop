@@ -22,7 +22,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="keywords" content="товары для рыбалки, охоты, туризма, активного отдыха, сезон, сезон66.ру, sezon66.ru">
-  <meta name="description" content="Сезон - магазин товаров для рыбалки, охоты, туризма, активного отдыха">
+  <meta name="description" content="Сезон - магазин товаров для рыбалки, охоты, туризма, активного отдыха. Официальный сайт sezon66.ru.">
   <meta name="author" content="">
 
   <title>Магазин "Сезон"</title>
@@ -103,6 +103,9 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     {% if request.user.is_superuser %}
                       <a href='{% url "admin:index" %}' class="dropdown-item">Сайт администратора</a> 
+                    {% endif %}
+                    {% if "Personal" in user_groups %}
+                      <a href='{% url "admin:index" %}' class="dropdown-item">Сайт для персонала</a> 
                     {% endif %}
                     <a href='{% url "account" %}' class="dropdown-item">Личный кабинет</a>  
                     <a href='{% url "logout" %}' class="dropdown-item">Выйти</a>           

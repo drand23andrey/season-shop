@@ -57,7 +57,9 @@ def product_view(request, product_slug):
     product = Product.objects.get(slug=product_slug)
     categories = Category.objects.all()
     parts = Part.objects.all()
+    user_groups = list(request.user.groups.values_list('name', flat=True))
     context = {
+        'user_groups': user_groups,
         'product': product, 
         'categories': categories, 
         'parts': parts, 
@@ -75,21 +77,21 @@ def catalog_view(request):
 		cart.save()
 		cart_id = cart.id
 		request.session['cart_id'] = cart_id
-		cart = Cart.objects.get(id=cart_id)
-
+		cart = Cart.objects.get(id=cart_id)	
 	categories_temp = Category.objects.all()
 	categories = []
 	for category in categories_temp:
 		if category.is_available():
-			categories += categories_temp.filter(name=category.name)
-
+			categories += categories_temp.filter(name=category.name)	
 	parts_temp = Part.objects.all()
 	parts = []
 	for part in parts_temp:
 		if part.is_available():
 			parts += parts_temp.filter(name=part.name)	
-	
+
+	user_groups = list(request.user.groups.values_list('name', flat=True))
 	context = {
+	    'user_groups': user_groups,
 		'categories': categories, 
 		'parts': parts, 
 		'cart': cart, 
@@ -109,21 +111,22 @@ def part_view(request, part_slug):
 		cart = Cart.objects.get(id=cart_id)
 	parts = Part.objects.all()
 	categories = Category.objects.all()
-	part = Part.objects.get(slug=part_slug)
-
+	part = Part.objects.get(slug=part_slug)	
 	categories_of_part_temp = Category.objects.filter(part=part)	
 	categories_of_part = []
 	for category in categories_of_part_temp:
 		if category.is_available():
 			categories_of_part += categories_of_part_temp.filter(name=category.name)
-		
+
+	user_groups = list(request.user.groups.values_list('name', flat=True))
 	context = {
+	    'user_groups': user_groups,
 		'parts': parts, 
 		'categories': categories, 
-        'part': part, 
+	    'part': part, 
 		'categories_of_part': categories_of_part,
 		'cart': cart
-    }
+	}
 	return render(request, 'part.html', context)
 
 def category_view(request, category_slug):
@@ -139,8 +142,7 @@ def category_view(request, category_slug):
 		cart = Cart.objects.get(id=cart_id)
 	parts = Part.objects.all()
 	categories = Category.objects.all()
-	category = Category.objects.get(slug=category_slug)
-
+	category = Category.objects.get(slug=category_slug)	
 	# для динамического отображения ПОДКАТЕГОРИЙ с is_available==True на странице category.html
 	# TODO
 	subcategories_of_category_temp = SubCategory.objects.filter(category=category)
@@ -148,31 +150,30 @@ def category_view(request, category_slug):
 	for subcategory in subcategories_of_category_temp:
 		if subcategory.is_available():
 			subcategories_of_category += subcategories_of_category_temp.filter(name=subcategory.name)
-			continue    
-
+			continue    	
 	# для динамического отображения ПРОДУКТОВ с признаком available==True на странице category.html
 	# TODO
 	products_of_category = Product.objects.none()
 	for subcategory in subcategories_of_category:
-		products_of_category = products_of_category | Product.objects.filter(subcategory=subcategory, available=True)
-
+		products_of_category = products_of_category | Product.objects.filter(subcategory=subcategory, available=True)	
 	len_products_of_category = len(products_of_category)
 	if len_products_of_category > 30:
 		products_of_category = list(products_of_category)
 		shuffle(products_of_category)
 		products_of_category = products_of_category[:30]
 	else:
-		products_of_category = products_of_category.order_by('title')
-
+		products_of_category = products_of_category.order_by('title')	
+	user_groups = list(request.user.groups.values_list('name', flat=True))
 	context = {
-        'parts': parts, 
+	    'user_groups': user_groups,
+	    'parts': parts, 
 		'categories': categories, 
 		'category': category, 
 		'subcategories_of_category': subcategories_of_category,
 		'products_of_category': products_of_category,
 		'len_products_of_category': len_products_of_category,
 		'cart': cart
-    }
+	}
 	return render(request, 'category.html', context)
 
 def subcategory_view(request, subcategory_slug):
@@ -191,7 +192,9 @@ def subcategory_view(request, subcategory_slug):
     subcategory = SubCategory.objects.get(slug=subcategory_slug)
     price_filter_type = request.GET.get('price_filter_type')
     products_of_subcategory = Product.objects.filter(subcategory=subcategory).order_by('title')
+    user_groups = list(request.user.groups.values_list('name', flat=True))
     context = {
+        'user_groups': user_groups,
         'parts': parts, 
         'categories': categories, 
         'subcategory': subcategory, 
@@ -215,7 +218,9 @@ def cart_view(request):
     categories = Category.objects.all()
     parts = Part.objects.all()
 
+    user_groups = list(request.user.groups.values_list('name', flat=True))
     context = {
+        'user_groups': user_groups,
         'cart': cart, 
         'categories': categories, 
         'parts': parts, 
@@ -298,15 +303,15 @@ def checkout_view(request):
 		cart.save()
 		cart_id = cart.id
 		request.session['cart_id'] = cart_id
-		cart = Cart.objects.get(id=cart_id)
-
+		cart = Cart.objects.get(id=cart_id)	
 	categories = Category.objects.all()
-	parts = Part.objects.all()
-
+	parts = Part.objects.all()	
+	user_groups = list(request.user.groups.values_list('name', flat=True))
 	context = {
+	    'user_groups': user_groups,
 		'cart': cart,
-        'categories': categories, 
-        'parts': parts, 
+	    'categories': categories, 
+	    'parts': parts, 
 	}
 	return render(request, 'checkout.html', context)
 
@@ -325,12 +330,14 @@ def order_create_view(request):
 	form = OrderForm(request.POST or None)
 	categories = Category.objects.all()
 	parts = Part.objects.all()
+	user_groups = list(request.user.groups.values_list('name', flat=True))
 	context = {
+	    'user_groups': user_groups,
 		'first_name': first_name,
 		'form': form,
 		'cart': cart,
-        'categories': categories, 
-        'parts': parts, 
+	    'categories': categories, 
+	    'parts': parts, 
 	}
 	return render(request, 'order.html', context)
 
@@ -348,10 +355,12 @@ def make_order_view(request):
 	form = OrderForm(request.POST or None)
 	categories = Category.objects.all()
 	parts = Part.objects.all()	
+	user_groups = list(request.user.groups.values_list('name', flat=True))
 	context = {
+	    'user_groups': user_groups,
 		'cart': cart,
-        'categories': categories, 
-        'parts': parts, 
+	    'categories': categories, 
+	    'parts': parts, 
 	}
 	if form.is_valid():
 		name = form.cleaned_data['name']
@@ -373,9 +382,11 @@ def make_order_view(request):
 def thank_you_view(request):
 	categories = Category.objects.all()
 	parts = Part.objects.all()
+	user_groups = list(request.user.groups.values_list('name', flat=True))
 	context = {
-        'categories': categories, 
-        'parts': parts, 
+	    'user_groups': user_groups,
+	    'categories': categories, 
+	    'parts': parts, 
 	}
 	return render(request, 'thank_you.html', context)
 
@@ -384,10 +395,12 @@ def account_view(request):
 	username = request.user.username
 	categories = Category.objects.all()
 	parts = Part.objects.all()
+	user_groups = list(request.user.groups.values_list('name', flat=True))
 	context = {
+	    'user_groups': user_groups,
 		'order': order,
-        'categories': categories, 
-        'parts': parts, 
+	    'categories': categories, 
+	    'parts': parts, 
 		'username': username,
 	}
 	return render(request, 'account.html', context)
@@ -413,10 +426,12 @@ def registration_view(request):
 		if login_user:
 			login(request, login_user)
 			return HttpResponseRedirect(reverse('base'))
+	user_groups = list(request.user.groups.values_list('name', flat=True))
 	context = {
+	    'user_groups': user_groups,
 		'form': form,
-        'categories': categories, 
-        'parts': parts, 
+	    'categories': categories, 
+	    'parts': parts, 
 	}
 	return render(request, 'registration.html', context)
 
@@ -430,14 +445,14 @@ def login_view(request):
 		login_user = authenticate(username=username, password=password)
 		if login_user:
 			login(request, login_user)
-			return HttpResponseRedirect(reverse('base'))
-
+			return HttpResponseRedirect(reverse('base'))	
 	categories = Category.objects.all()
-	parts = Part.objects.all()
-
+	parts = Part.objects.all()	
+	user_groups = list(request.user.groups.values_list('name', flat=True))
 	context = {
+	    'user_groups': user_groups,
 		'form': form,
-        'categories': categories, 
-        'parts': parts, 
+	    'categories': categories, 
+	    'parts': parts, 
 	}
 	return render(request, 'login.html', context)

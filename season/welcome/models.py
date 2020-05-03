@@ -172,7 +172,7 @@ def pre_save_product_slug(sender, instance, *args, **kwargs):
             slug = slugify(translit(str(instance.title), reversed=True))
         except exceptions.LanguageDetectionError:
             slug = slugify(str(instance.title))
-        instance.slug = slug
+        instance.slug = slug + '-' + str(instance.id)
 
 pre_save.connect(pre_save_product_slug, sender=Product)
 		

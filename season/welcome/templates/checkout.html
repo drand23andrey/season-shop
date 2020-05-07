@@ -4,7 +4,7 @@
 {% block content %}
 
 <h5 style="margin: 10px 0 10px 0;" class="text-center">Ваш заказ</h5>
-    <table class="table" style="margin: auto;">
+    <table class="table" style="margin: auto; max-width: 600px;">
       {% for item in cart.items.all %}
       <tr>
         <td style="border-bottom: 1px solid #dee2e6;">

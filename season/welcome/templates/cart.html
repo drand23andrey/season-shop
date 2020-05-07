@@ -6,7 +6,7 @@
 <h5 style="margin: 10px 0 10px 0;" class="text-center">Ваша корзина</h5>
 <div class="my-cart">
 
-  <table class="table" style="margin: auto;">
+  <table class="table" style="margin: auto; max-width: 600px;">
     {% for item in cart.items.all %}
     <tr class="cart-item-{{ item.product.id }}">
       <td style="border-bottom: 1px solid #dee2e6; width: 99%;">

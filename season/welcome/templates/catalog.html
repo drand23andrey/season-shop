@@ -3,7 +3,7 @@
 {% block content %}
 
 {% for part in parts %}
-<div class="row">
+<div class="row category-name">
   <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
     <h5 class="my-4">{{part.name}}</h5>
   </div>  
@@ -29,8 +29,23 @@
 
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script>
+  // $(window).resize(function(){      
+  //   var element = (document.getElementsByClassName("category-name"))[0];
+  //   if ($(window).width() <= 991 ) {      
+  //     element.style.display = "none";
+  //   }else{      
+  //     element.style.display = "flex";
+  //   }
+  // })
   // асинхронный скриптинг для корзины
   $(document).ready(function(){
+    // var element = (document.getElementsByClassName("category-name"))[0];
+    // if ($(window).width() <= 991 ) {      
+    //   element.style.display = "none";
+    // }else{      
+    //   element.style.display = "flex";
+    // }
+
     $('.add_to_cart').on('click', function(e){
       e.preventDefault()
       product_slug = $(this).attr('data-slug')

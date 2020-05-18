@@ -75,13 +75,18 @@
             <div style="margin: 10px 0 10px 0;" class="text-center">
               <a>{{ product.price }} &#8381;</a>
             </div>          
-            {% if request.user.is_authenticated %}
+            <p class='text-center'>
+              <a href='#' class='add_to_cart' data-slug='{{ product.slug }}'>
+                <button class='btn btn-dark btn-block'>Добавить в корзину</button>
+              </a>
+            </p>
+            <!-- {% if request.user.is_authenticated %}
               <p class='text-center'>
                 <a href='#' class='add_to_cart' data-slug='{{ product.slug }}'>
                   <button class='btn btn-dark btn-block'>Добавить в корзину</button>
                 </a>
               </p>
-            {% endif %} 
+            {% endif %}  -->
           </div>
         </div>
       </div>

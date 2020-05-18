@@ -13,4 +13,21 @@ Disallow: /subcategory
 Disallow: /subcategory/
 Disallow: /admin
 Disallow: /admin/
+
+User-agent: Googlebot
+Disallow: /cart
+Disallow: /cart/
+Disallow: /account
+Disallow: /account/
+Disallow: /login
+Disallow: /login/
+Disallow: /registration
+Disallow: /registration/
+Disallow: /subcategory
+Disallow: /subcategory/
+Disallow: /subcategory
+Disallow: /subcategory/
+Disallow: /admin
+Disallow: /admin/
+
 sitemap: https://sezon66.ru/sitemap.xml

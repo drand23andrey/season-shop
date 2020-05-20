@@ -1,11 +1,25 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+
 <div class="row">
-    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-        <h5>{{ part.name }}</h5>
+  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+    <div class="nav-big" style="display: inline-flex;">     
+      <a href='{% url "catalog" %}'>
+        <button class='btn btn-sm btn-dark btn-block'>Каталог</button>
+      </a>
+      <p style="padding: 3px 5px 0 5px;">></p>
+      <p style="padding-top: 4px;">{{ part.name }}</p>   
     </div>
+    <div class="nav-small" style="display: inline-flex;">        
+      <a href='{% url "catalog" %}'>
+        <button class='btn btn-sm btn-dark btn-block'><</button>
+      </a>
+      <p style="padding-left: 10px; padding-top: 4px;">{{ part.name }}</p>
+    </div>
+  </div>
 </div>
+
 <div class="row">
   {%for category in categories_of_part%}
   <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6">
@@ -23,8 +37,27 @@
 </div>
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script>
-  // асинхронный скриптинг для корзины
-  $(document).ready(function(){
+  $(window).resize(function(){      
+    var nav_small = (document.getElementsByClassName("nav-small"))[0];
+    var nav_big = (document.getElementsByClassName("nav-big"))[0];
+    if ($(window).width() <= 991 ) {      
+      nav_big.style.display = "none";
+      nav_small.style.display = "inline-flex";
+    }else{      
+      nav_big.style.display = "inline-flex";
+      nav_small.style.display = "none";
+    }
+  })
+  $(document).ready(function(){ 
+    var nav_small = (document.getElementsByClassName("nav-small"))[0];
+    var nav_big = (document.getElementsByClassName("nav-big"))[0];
+    if ($(window).width() <= 991 ) {      
+      nav_big.style.display = "none";
+      nav_small.style.display = "inline-flex";
+    }else{      
+      nav_big.style.display = "inline-flex";
+      nav_small.style.display = "none";
+    }
     $('.add_to_cart').on('click', function(e){
       e.preventDefault()
       product_slug = $(this).attr('data-slug')

@@ -7,12 +7,39 @@
   </div>
 </div>
 
-{% if len_products_of_category > 30 %}
 <div class="row">
   <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-      <h5>{{ category.name }}</h5>
+    <div class="nav-big" style="display: inline-flex;">     
+      <a href='{% url "catalog" %}'>
+        <button class='btn btn-sm btn-dark btn-block'>Каталог</button>
+      </a>
+      <p style="padding: 3px 5px 0 5px;">></p>  
+      <a href='{{ category.part.get_absolute_url }}'>
+        <button class='btn btn-sm btn-dark btn-block'>{{ category.part }}</button>
+      </a>
+      <p style="padding: 3px 5px 0 5px;">></p>
+      <p style="padding-top: 4px;">{{ category.name }}</p>   
+    </div>
+
+    <div class="nav-small" style="display: inline-flex;">        
+      <div class="btn-group btn-group-sm">
+        <div class="btn-group dropleft btn-group-sm" role="group">
+          <button style="padding-left: 10px; padding-right: 11px;" type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="sr-only">Toggle Dropleft</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href='{% url "catalog" %}' class="dropdown-item">Каталог</a>  
+            <a href='{{ category.part.get_absolute_url }}' class="dropdown-item">{{ category.part }}</a>   
+            <a href='#' class="dropdown-item disabled">{{ category.name }}</a>   
+          </div>
+        </div>
+      </div>
+      <p style="padding-left: 10px; padding-top: 4px;">{{ category.name }}</p>
+    </div>
   </div>
 </div>
+
+{% if len_products_of_category > 30 %}
   <div class="row">
       {%for subcategory in subcategories_of_category%}
         {% if subcategory.category == category %}
@@ -57,11 +84,6 @@
   {% endif %} -->
 {% else %}
   <div class="row">
-    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-        <h5>Все товары категории {{ category.name }}</h5>
-    </div>
-  </div>
-  <div class="row">
   {%for product in products_of_category%}  
     {% if product.available %}
       <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12">
@@ -96,8 +118,27 @@
 {% endif %}
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script>
-  // асинхронный скриптинг для корзины
-  $(document).ready(function(){
+  $(window).resize(function(){      
+    var nav_small = (document.getElementsByClassName("nav-small"))[0];
+    var nav_big = (document.getElementsByClassName("nav-big"))[0];
+    if ($(window).width() <= 991 ) {      
+      nav_big.style.display = "none";
+      nav_small.style.display = "inline-flex";
+    }else{      
+      nav_big.style.display = "inline-flex";
+      nav_small.style.display = "none";
+    }
+  })
+  $(document).ready(function(){ 
+    var nav_small = (document.getElementsByClassName("nav-small"))[0];
+    var nav_big = (document.getElementsByClassName("nav-big"))[0];
+    if ($(window).width() <= 991 ) {      
+      nav_big.style.display = "none";
+      nav_small.style.display = "inline-flex";
+    }else{      
+      nav_big.style.display = "inline-flex";
+      nav_small.style.display = "none";
+    }
     $('.add_to_cart').on('click', function(e){
       e.preventDefault()
       $('.toast').toast('show')

@@ -13,7 +13,7 @@ ADMINS = (
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['sezon66.ru', '127.0.0.1']
 
@@ -93,9 +93,11 @@ TIME_ZONE = 'Asia/Yekaterinburg'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
 USE_TZ = True
+
+DECIMAL_SEPARATOR = '.'
 
 
 # Static files (CSS, JavaScript, Images)

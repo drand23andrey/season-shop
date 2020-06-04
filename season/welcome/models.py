@@ -25,14 +25,14 @@ def image_folder(instance, filename):
 #******************************************************************************
 
 class CarouselElement(models.Model):
-    name = models.CharField(max_length=30)
-    description = models.TextField(max_length=250)
-    subscription = models.TextField(max_length=300, blank=True)
-    available = models.BooleanField(default=True)
-    button = models.CharField(max_length=30, blank=True)
-    link = models.CharField(max_length=300, blank=True)
-    image = models.ImageField(upload_to=image_folder, blank=True)
-    slug = models.SlugField(blank=True)	
+    name = models.CharField(max_length=30, verbose_name=('Заголовок элемента'))
+    description = models.TextField(max_length=250, verbose_name=('Текст верхний'))
+    subscription = models.TextField(max_length=300, blank=True, verbose_name=('Текст нижний'))
+    available = models.BooleanField(default=True, verbose_name=('Элемент видим на сайте'))
+    button = models.CharField(max_length=30, blank=True, verbose_name=('Текст в кнопке'))
+    link = models.CharField(max_length=300, blank=True, verbose_name=('Ссылка'))
+    image = models.ImageField(upload_to=image_folder, blank=True, verbose_name=('Изображение'))
+    slug = models.SlugField(blank=True, verbose_name=('Слаг (заполняется автоматически)'))	
     def __str__(self):
         return self.name      
 
@@ -49,9 +49,9 @@ pre_save.connect(pre_save_carousel_element_slug, sender=CarouselElement)
 #******************************************************************************
 
 class Part(models.Model):
-    name = models.CharField(max_length=100)
-    slug = models.SlugField(blank=True)	
-    image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
+    name = models.CharField(max_length=100, verbose_name=('Название темы'))
+    slug = models.SlugField(blank=True, verbose_name=('Слаг (заполняется автоматически)'))	
+    image = models.ImageField(upload_to=image_folder, default='no_foto.jpg', verbose_name=('Изображение темы'))
 
     def is_available(self):
         categories_of_part = Category.objects.filter(part=self)
@@ -78,10 +78,10 @@ pre_save.connect(pre_save_part_slug, sender=Part)
 #******************************************************************************
 
 class Category(models.Model):
-    name = models.CharField(max_length=100)
-    part = models.ForeignKey(Part, on_delete=models.CASCADE)
-    slug = models.SlugField(blank=True)	
-    image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
+    name = models.CharField(max_length=100, verbose_name=('Название категории'))
+    part = models.ForeignKey(Part, on_delete=models.CASCADE, verbose_name=('Тема'))
+    slug = models.SlugField(blank=True, verbose_name=('Слаг (заполняется автоматически)'))	
+    image = models.ImageField(upload_to=image_folder, default='no_foto.jpg', verbose_name=('Изображение категории'))
 
     def is_available(self):
         subcategories_of_category = SubCategory.objects.filter(category=self)
@@ -107,10 +107,10 @@ pre_save.connect(pre_save_category_slug, sender=Category)
 
 #******************************************************************************
 class SubCategory(models.Model):
-    name = models.CharField(max_length=100)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    slug = models.SlugField(blank=True)	
-    image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
+    name = models.CharField(max_length=100, verbose_name=('Название подкатегории'))
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name=('Категория'))
+    slug = models.SlugField(blank=True, verbose_name=('Слаг (заполняется автоматически)'))	
+    image = models.ImageField(upload_to=image_folder, default='no_foto.jpg', verbose_name=('Изображение подкатегории'))
 
     def is_available(self):
         products_of_subcategory = Product.objects.filter(subcategory=self, available=True)
@@ -133,8 +133,8 @@ pre_save.connect(pre_save_subcategory_slug, sender=SubCategory)
 
 #******************************************************************************
 class Brand(models.Model):
-	name = models.CharField(max_length=100)
-	slug = models.SlugField(blank=True)
+	name = models.CharField(max_length=100, verbose_name=('Бренд'))
+	slug = models.SlugField(blank=True, verbose_name=('Слаг (заполняется автоматически)'))
 	def __str__(self):
 		return self.name
 
@@ -151,14 +151,14 @@ pre_save.connect(pre_save_brand_slug, sender=Brand)
 #******************************************************************************
 
 class Product(models.Model):    
-    subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
-    title = models.CharField(max_length=120)
-    price = models.DecimalField(max_digits=9, decimal_places=2)
-    available = models.BooleanField(default=True)
-    image = models.ImageField(upload_to=image_folder, default='no_foto.jpg')
-    description = models.TextField(blank=True)
-    slug = models.SlugField(blank=True)
+    subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE, verbose_name=('Подкатегория товара'))
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, verbose_name=('Бренд товара'))
+    title = models.CharField(max_length=120, verbose_name=('Наименование товара'))
+    price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name=('Стоимость товара'))
+    available = models.BooleanField(default=True, verbose_name=('Товар доступен к заказу'))
+    image = models.ImageField(upload_to=image_folder, default='no_foto.jpg', verbose_name=('Изображение товара'))
+    description = models.TextField(blank=True, verbose_name=('Описание товара'))
+    slug = models.SlugField(blank=True, verbose_name=('Слаг (заполняется автоматически)'))
 
     def __str__(self):
     	return self.title  
@@ -181,9 +181,9 @@ pre_save.connect(pre_save_product_slug, sender=Product)
 # элемент корзины
 class CartItem(models.Model):
 
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    qty = models.PositiveIntegerField(default=1)
-    item_total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=('Выбранный товар'))
+    qty = models.PositiveIntegerField(default=1, verbose_name=('Количество выбранного товара'))
+    item_total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00, verbose_name=('Итоговая стоимость товара'))
 
     def __str__(self):
         return "{0} x {1}".format(self.qty, self.product.title)
@@ -193,8 +193,8 @@ class CartItem(models.Model):
 # корзина
 class Cart(models.Model):
 
-    items = models.ManyToManyField(CartItem, blank=True)
-    cart_total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
+    items = models.ManyToManyField(CartItem, blank=True, verbose_name=('Выбранные товары'))
+    cart_total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00, verbose_name=('Стоимость корзины'))
 
     def __str__(self):
         return 'Корзина №' + str(self.id)
@@ -265,13 +265,13 @@ ORDER_STATUS_CHOICES = (
 )
 
 class Order(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    items = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
-    first_name = models.CharField(max_length=200)
-    phone = models.CharField(max_length=20)
-    comments = models.TextField(blank=True)
-    status = models.CharField(max_length=100, choices=ORDER_STATUS_CHOICES, default=ORDER_STATUS_CHOICES[0][0])
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=('Логин пользователя'))
+    items = models.ForeignKey(Cart, on_delete=models.CASCADE, verbose_name=('Номер корзины'))
+    total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00, verbose_name=('Стоимость заказа'))
+    first_name = models.CharField(max_length=200, verbose_name=('Имя пользователя'))
+    phone = models.CharField(max_length=20, verbose_name=('Контактный телефон'))
+    comments = models.TextField(blank=True, verbose_name=('Комментарии к заказу'))
+    status = models.CharField(max_length=100, choices=ORDER_STATUS_CHOICES, default=ORDER_STATUS_CHOICES[0][0], verbose_name=('Статус заказа'))
 
     def order(self):
         return 'Заказ №' + str(self.id)

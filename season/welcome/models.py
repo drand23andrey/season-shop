@@ -33,6 +33,11 @@ class CarouselElement(models.Model):
     link = models.CharField(max_length=300, blank=True, verbose_name=('Ссылка'))
     image = models.ImageField(upload_to=image_folder, blank=True, verbose_name=('Изображение'))
     slug = models.SlugField(blank=True, verbose_name=('Слаг (заполняется автоматически)'))	
+
+    class Meta:
+        verbose_name = 'Элемент карусели'
+        verbose_name_plural = 'Элементы карусели'
+
     def __str__(self):
         return self.name      
 
@@ -52,6 +57,10 @@ class Part(models.Model):
     name = models.CharField(max_length=100, verbose_name=('Название темы'))
     slug = models.SlugField(blank=True, verbose_name=('Слаг (заполняется автоматически)'))	
     image = models.ImageField(upload_to=image_folder, default='no_foto.jpg', verbose_name=('Изображение темы'))
+
+    class Meta:
+        verbose_name = 'Тема товаров'
+        verbose_name_plural = 'Темы товаров'
 
     def is_available(self):
         categories_of_part = Category.objects.filter(part=self)
@@ -83,6 +92,10 @@ class Category(models.Model):
     slug = models.SlugField(blank=True, verbose_name=('Слаг (заполняется автоматически)'))	
     image = models.ImageField(upload_to=image_folder, default='no_foto.jpg', verbose_name=('Изображение категории'))
 
+    class Meta:
+        verbose_name = 'Категория товаров'
+        verbose_name_plural = 'Категории товаров'
+
     def is_available(self):
         subcategories_of_category = SubCategory.objects.filter(category=self)
         for subcategory in subcategories_of_category:
@@ -112,6 +125,10 @@ class SubCategory(models.Model):
     slug = models.SlugField(blank=True, verbose_name=('Слаг (заполняется автоматически)'))	
     image = models.ImageField(upload_to=image_folder, default='no_foto.jpg', verbose_name=('Изображение подкатегории'))
 
+    class Meta:
+        verbose_name = 'Подкатегория товаров'
+        verbose_name_plural = 'Подкатегории товаров'
+
     def is_available(self):
         products_of_subcategory = Product.objects.filter(subcategory=self, available=True)
         return True if products_of_subcategory else False   
@@ -133,10 +150,14 @@ pre_save.connect(pre_save_subcategory_slug, sender=SubCategory)
 
 #******************************************************************************
 class Brand(models.Model):
-	name = models.CharField(max_length=100, verbose_name=('Бренд'))
-	slug = models.SlugField(blank=True, verbose_name=('Слаг (заполняется автоматически)'))
-	def __str__(self):
-		return self.name
+    name = models.CharField(max_length=100, verbose_name=('Бренд'))
+    slug = models.SlugField(blank=True, verbose_name=('Слаг (заполняется автоматически)'))
+    def __str__(self):
+    	return self.name
+
+    class Meta:
+        verbose_name = 'Бренд'
+        verbose_name_plural = 'Бренды'
 
 def pre_save_brand_slug(sender, instance, *args, **kwargs):
     if not instance.slug:
@@ -159,6 +180,10 @@ class Product(models.Model):
     image = models.ImageField(upload_to=image_folder, default='no_foto.jpg', verbose_name=('Изображение товара'))
     description = models.TextField(blank=True, verbose_name=('Описание товара'))
     slug = models.SlugField(blank=True, verbose_name=('Слаг (заполняется автоматически)'))
+
+    class Meta:
+        verbose_name = 'Товар'
+        verbose_name_plural = 'Товары'
 
     def __str__(self):
     	return self.title  
@@ -185,6 +210,10 @@ class CartItem(models.Model):
     qty = models.PositiveIntegerField(default=1, verbose_name=('Количество выбранного товара'))
     item_total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00, verbose_name=('Итоговая стоимость товара'))
 
+    class Meta:
+        verbose_name = 'Товар из корзины'
+        verbose_name_plural = 'Товары из корзины'
+
     def __str__(self):
         return "{0} x {1}".format(self.qty, self.product.title)
 
@@ -195,6 +224,10 @@ class Cart(models.Model):
 
     items = models.ManyToManyField(CartItem, blank=True, verbose_name=('Выбранные товары'))
     cart_total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00, verbose_name=('Стоимость корзины'))
+
+    class Meta:
+        verbose_name = 'Корзина'
+        verbose_name_plural = 'Корзины'
 
     def __str__(self):
         return 'Корзина №' + str(self.id)
@@ -272,6 +305,10 @@ class Order(models.Model):
     phone = models.CharField(max_length=20, verbose_name=('Контактный телефон'))
     comments = models.TextField(blank=True, verbose_name=('Комментарии к заказу'))
     status = models.CharField(max_length=100, choices=ORDER_STATUS_CHOICES, default=ORDER_STATUS_CHOICES[0][0], verbose_name=('Статус заказа'))
+    
+    class Meta:
+        verbose_name = 'Заказ'
+        verbose_name_plural = 'Заказы'
 
     def order(self):
         return 'Заказ №' + str(self.id)

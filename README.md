@@ -4,7 +4,7 @@
 
 [![Python Version](https://img.shields.io/badge/Python-3.8.0-brightgreen.svg)](https://python.org)
 [![Django Version](https://img.shields.io/badge/Django-3.0.5-green.svg)](https://djangoproject.com)
-[![Django Version](https://img.shields.io/badge/bootstrap-4.2.1-green.svg)](https://getbootstrap.com/docs/4.2/getting-started/introduction/)
+[![Bootstrap Version](https://img.shields.io/badge/Bootstrap-4.2.1-green.svg)](https://getbootstrap.com/docs/4.2/getting-started/introduction/)
 
 ### Локальный запуск проекта:
 

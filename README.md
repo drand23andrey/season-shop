@@ -34,3 +34,7 @@ python manage.py runserver
 
 Сайт будет доступен локально по адресу: **127.0.0.1:8000**.
 
+### Стек:
+- python, django
+- html, css, js, ajax, jQuery, bootstrap4
+
